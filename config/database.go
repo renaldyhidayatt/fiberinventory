@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"fiberinventory/models"
 
 	logger "github.com/sirupsen/logrus"
 
@@ -13,15 +13,23 @@ func SetupDatabase() *gorm.DB {
 	const (
 		host     = "localhost"
 		port     = 5432
-		user     = "holyraven"
+		user     = ""
 		password = ""
-		dbname   = "inventory"
+		dbname   = "invengo"
 	)
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-	db, err := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{})
+	dsn := "host=127.0.01 user=holyraven password= dbname=invengo port=5432 sslmode=disable"
+	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
+	// 	"password=%s dbname=%s sslmode=disable",
+	// 	host, port, user, password, dbname)
 
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		defer logger.Info("Database connection failed")
+		logger.Fatal(err)
+		return nil
+	}
+
+	err = db.AutoMigrate(&models.ModelCategory{}, &models.ModelUser{})
 	if err != nil {
 		defer logger.Info("Database connection failed")
 		logger.Fatal(err)
