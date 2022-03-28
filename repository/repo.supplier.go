@@ -5,6 +5,7 @@ import (
 	"fiberinventory/schemas"
 	"net/http"
 
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -64,7 +65,7 @@ func (r *repositorySupplier) EntityResults() (*[]models.ModelSupplier, schemas.S
 
 	if checksupplierName.RowsAffected < 1 {
 		err <- schemas.SchemaDatabaseError{
-			Code: http.StatusNotFound,
+			Code: fiber.StatusNotFound,
 			Type: "error_results_01",
 		}
 	}
@@ -86,7 +87,7 @@ func (r *repositorySupplier) EntityResult(input *schemas.SchemaSupplier) (*model
 
 	if checkSupplierName.RowsAffected < 1 {
 		err <- schemas.SchemaDatabaseError{
-			Code: http.StatusNotFound,
+			Code: fiber.StatusNotFound,
 			Type: "error_result_01",
 		}
 		return &supplier, <-err

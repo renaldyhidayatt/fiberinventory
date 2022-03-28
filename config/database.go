@@ -10,13 +10,13 @@ import (
 )
 
 func SetupDatabase() *gorm.DB {
-	const (
-		host     = "localhost"
-		port     = 5432
-		user     = ""
-		password = ""
-		dbname   = "invengo"
-	)
+	// const (
+	// 	host     = "localhost"
+	// 	port     = 5432
+	// 	user     = ""
+	// 	password = ""
+	// 	dbname   = "invengo"
+	// )
 	dsn := "host=127.0.01 user=holyraven password= dbname=invengo port=5432 sslmode=disable"
 	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 	// 	"password=%s dbname=%s sslmode=disable",
@@ -29,7 +29,7 @@ func SetupDatabase() *gorm.DB {
 		return nil
 	}
 
-	err = db.AutoMigrate(&models.ModelCategory{}, &models.ModelUser{})
+	err = db.AutoMigrate(&models.ModelCategory{}, &models.ModelUser{}, &models.ModelSupplier{}, &models.ModelCustomer{})
 	if err != nil {
 		defer logger.Info("Database connection failed")
 		logger.Fatal(err)
