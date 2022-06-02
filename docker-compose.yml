@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./.env
+
+  database:
+    image: postgres:14.1-alpine
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=inventory
+    ports:
+      - "5432:5432"
+    networks:
+      - database_net
+
+
+volumes:
+  db:
+
+networks:
+  database_net:

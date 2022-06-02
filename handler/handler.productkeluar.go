@@ -7,21 +7,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type handlerSupplier struct {
-	supplier entity.EntitySupplier
+type handlerProductKeluar struct {
+	productkeluar entity.EntityProductKeluar
 }
 
-func NewHandlerSupplier(supplier entity.EntitySupplier) *handlerSupplier {
-	return &handlerSupplier{supplier: supplier}
+func NewHandlerProductKeluar(productkeluar entity.EntityProductKeluar) *handlerProductKeluar {
+	return &handlerProductKeluar{productkeluar: productkeluar}
 }
 
-func (h *handlerSupplier) HandlerHello(c *fiber.Ctx) error {
-	return c.SendString("Handler Supplier")
+func (h *handlerProductKeluar) HandlerCreate(c *fiber.Ctx) error {
+	var body schemas.SchemaProductKeluar
 
-}
-
-func (h *handlerSupplier) HandlerCreate(c *fiber.Ctx) error {
-	var body schemas.SchemaSupplier
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
@@ -29,7 +25,7 @@ func (h *handlerSupplier) HandlerCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	_, error := h.supplier.EntityCreate(&body)
+	_, error := h.productkeluar.EntityCreate(&body)
 
 	if error.Type == "error_create_01" {
 		return c.Status(error.Code).JSON(fiber.Map{
@@ -44,76 +40,77 @@ func (h *handlerSupplier) HandlerCreate(c *fiber.Ctx) error {
 	})
 }
 
-func (h *handlerSupplier) HandlerResults(c *fiber.Ctx) error {
-	res, err := h.supplier.EntityResults()
+func (h *handlerProductKeluar) HandlerResults(c *fiber.Ctx) error {
+	res, err := h.productkeluar.EntityResults()
 
 	if err.Type == "error_results_01" {
 		return c.Status(err.Code).JSON(fiber.Map{
-			"msg":   "Customer Not found",
+			"msg":   "ProductKeluar Not found",
 			"error": err.Code,
 		})
 	}
 
 	return c.JSON(fiber.Map{
-		"msg":    "Customer data already to use",
+		"msg":    "productkeluar data ready",
 		"status": true,
 		"data":   res,
 	})
 }
 
-func (h *handlerSupplier) HandlerResult(c *fiber.Ctx) error {
-	var body schemas.SchemaSupplier
+func (h *handlerProductKeluar) HandlerResult(c *fiber.Ctx) error {
+	var body schemas.SchemaProductKeluar
 
 	id := c.Params("id")
+
 	body.ID = id
 
-	res, error := h.supplier.EntityResult(&body)
+	res, error := h.productkeluar.EntityResult(&body)
 
 	if error.Type == "error_result_01" {
 		c.Status(error.Code).JSON(fiber.Map{
-			"msg":   "Supplier not found",
+			"msg":   "ProductMasuk Not found",
 			"error": error.Code,
 		})
 	}
 
 	return c.JSON(fiber.Map{
-		"msg":    "Customer found",
+		"msg":    "ProductMasuk found",
 		"status": true,
 		"data":   res,
 	})
 }
 
-func (h *handlerSupplier) HandlerDelete(c *fiber.Ctx) error {
-	var body schemas.SchemaSupplier
+func (h *handlerProductKeluar) HandlerDelete(c *fiber.Ctx) error {
+	var body schemas.SchemaProductKeluar
 
 	id := c.Params("id")
 	body.ID = id
 
-	res, error := h.supplier.EntityResult(&body)
+	res, error := h.productkeluar.EntityResult(&body)
 
 	if error.Type == "error_delete_01" {
-		c.Status(error.Code).JSON(fiber.Map{
-			"msg":   "customer not found",
+		return c.Status(error.Code).JSON(fiber.Map{
+			"msg":   "product not found",
 			"error": error.Code,
 		})
 	}
 
 	if error.Type == "error_delete_02" {
-		c.Status(error.Code).JSON(fiber.Map{
-			"msg":   "customer id failed",
+		return c.Status(error.Code).JSON(fiber.Map{
+			"msg":   "product id failed",
 			"error": error.Code,
 		})
 	}
 
 	return c.JSON(fiber.Map{
-		"msg":    "Category  found",
+		"msg":    "Product found",
 		"status": true,
 		"data":   res,
 	})
 }
 
-func (h *handlerSupplier) HandlerUpdate(c *fiber.Ctx) error {
-	var body schemas.SchemaSupplier
+func (h *handlerProductKeluar) HandlerUpdate(c *fiber.Ctx) error {
+	var body schemas.SchemaProductKeluar
 	id := c.Params("id")
 
 	body.ID = id
@@ -125,24 +122,24 @@ func (h *handlerSupplier) HandlerUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	_, error := h.supplier.EntityUpdate(&body)
+	_, error := h.productkeluar.EntityUpdate(&body)
 
 	if error.Type == "error_update_01" {
 		c.Status(error.Code).JSON(fiber.Map{
-			"msg":   "customer not found",
+			"msg":   "product not found",
 			"error": error.Code,
 		})
 	}
 
 	if error.Type == "error_delete_02" {
 		c.Status(error.Code).JSON(fiber.Map{
-			"msg":   "customer category id failed",
+			"msg":   "product category id failed",
 			"error": error.Code,
 		})
 	}
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"msg":  "Update customer data success for this id",
+		"msg":  "Update product data success for this id",
 		"code": fiber.StatusCreated,
 	})
 }

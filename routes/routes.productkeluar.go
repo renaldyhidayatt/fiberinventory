@@ -10,19 +10,18 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewRouteProduct(db *gorm.DB, router *fiber.App) {
-	repository := repository.NewRepositoryProduct(db)
-	service := service.NewServiceProduct(repository)
-	handler := handler.NewHandlerProduct(service)
+func NewRouteProductKeluar(db *gorm.DB, router *fiber.App) {
+	repository := repository.NewRepositoryProductKeluar(db)
+	service := service.NewServiceProductKeluar(repository)
+	handler := handler.NewHandlerProductKeluar(service)
 
-	route := router.Group("/api/product")
+	route := router.Group("/api/productkeluar")
 
 	route.Use(middleware.Proctected())
-
-	route.Get("/hello", handler.HandlerHello)
 	router.Get("/", handler.HandlerResults)
 	router.Get("/:id", handler.HandlerResult)
 	router.Post("/create", handler.HandlerCreate)
 	router.Post("/update/:id", handler.HandlerUpdate)
 	router.Post("/delete/:id", handler.HandlerDelete)
+
 }

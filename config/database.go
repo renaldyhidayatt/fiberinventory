@@ -1,7 +1,13 @@
 package config
 
 import (
+	"encoding/json"
 	"fiberinventory/models"
+	"fiberinventory/pkg"
+	"fiberinventory/schemas"
+	"fmt"
+	"log"
+	"os"
 
 	logger "github.com/sirupsen/logrus"
 
@@ -9,18 +15,22 @@ import (
 	"gorm.io/gorm"
 )
 
+var Config = LoadConfiguration()
+
 func SetupDatabase() *gorm.DB {
 	// const (
 	// 	host     = "localhost"
 	// 	port     = 5432
-	// 	user     = ""
+	// 	user     = "postgres"
 	// 	password = ""
 	// 	dbname   = "invengo"
 	// )
-	dsn := "host=127.0.01 user=holyraven password= dbname=invengo port=5432 sslmode=disable"
-	// psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-	// 	"password=%s dbname=%s sslmode=disable",
-	// 	host, port, user, password, dbname)
+
+	dsn := fmt.Sprintf(
+		"host=%v user=%v password=%v dbname=%v port=%v",
+		pkg.GodotEnv("PG_HOST"), pkg.GodotEnv("PG_USER"), pkg.GodotEnv("PG_PASS"),
+		pkg.GodotEnv("PG_DBNM"), pkg.GodotEnv("PG_PORT"),
+	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -38,4 +48,19 @@ func SetupDatabase() *gorm.DB {
 	}
 
 	return db
+}
+
+func LoadConfiguration() schemas.Configuration {
+	var configuration schemas.Configuration
+	file, err := os.Open("./config.json")
+	if err != nil {
+		log.Fatal("Error reading the file")
+	}
+	defer file.Close()
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&configuration)
+	if err != nil {
+		log.Fatal("can't decode config JSON: ", err)
+	}
+	return configuration
 }

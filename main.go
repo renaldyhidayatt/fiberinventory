@@ -24,6 +24,7 @@ func main() {
 	routes.NewRouteSale(db, app)
 	routes.NewRouteProduct(db, app)
 	routes.NewRouteProductMasuk(db, app)
+	routes.NewRouteProductKeluar(db, app)
 
 	app.Listen(":5000")
 }
