@@ -7,25 +7,32 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5000:5000"
-    env_file:
-      - ./.env
-
-  database:
-    image: postgres:14.1-alpine
+    restart: on-failure
     volumes:
-      - db:/var/lib/postgresql/data
+      - api:/usr/app/src
+    depends_on:
+      - dbpostgres
+    networks:
+      - sanedge
+
+
+  dbpostgres:
+    image: postgres:14.1-alpine
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=inventory
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
     ports:
       - "5432:5432"
     networks:
-      - database_net
-
+      - sanedge
+    restart: unless-stopped
 
 volumes:
-  db:
+  api:
+  database:
 
 networks:
-  database_net:
+  sanedge:
+    driver: bridge

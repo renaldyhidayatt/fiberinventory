@@ -2,6 +2,7 @@ package main
 
 import (
 	"fiberinventory/config"
+	"fiberinventory/middleware"
 	"fiberinventory/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,14 +18,9 @@ func main() {
 
 	app.Get("/", helloWorld)
 
-	routes.NewRouteAuth(db, app)
-	routes.NewRouteMerchant(db, app)
-	routes.NewRouteCustomer(db, app)
-	routes.NewRouteSupplier(db, app)
-	routes.NewRouteSale(db, app)
-	routes.NewRouteProduct(db, app)
-	routes.NewRouteProductMasuk(db, app)
-	routes.NewRouteProductKeluar(db, app)
+	app.Use(middleware.Proctected())
+
+	routes.NewRoute(db, app)
 
 	app.Listen(":5000")
 }
