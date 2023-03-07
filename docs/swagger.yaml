@@ -1,0 +1,1249 @@
+definitions:
+  domain.CategoryInput:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
+  domain.CustomerInput:
+    properties:
+      alamat:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        minLength: 12
+        type: string
+    required:
+    - alamat
+    - email
+    - id
+    - name
+    - phone
+    type: object
+  domain.ErrorMessage:
+    properties:
+      error:
+        type: boolean
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  domain.ProductInput:
+    properties:
+      category_id:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      qty:
+        type: string
+    required:
+    - category_id
+    - image
+    - name
+    - qty
+    type: object
+  domain.ProductKeluarInput:
+    properties:
+      category_id:
+        type: string
+      id:
+        type: string
+      product_id:
+        type: string
+      qty:
+        type: string
+    required:
+    - category_id
+    - product_id
+    - qty
+    type: object
+  domain.ProductMasukInput:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      product_id:
+        type: string
+      qty:
+        type: string
+      supplier_id:
+        type: string
+    required:
+    - name
+    - product_id
+    - qty
+    - supplier_id
+    type: object
+  domain.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  domain.ResponseAuth:
+    properties:
+      jwt: {}
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  domain.SaleInput:
+    properties:
+      alamat:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        minLength: 12
+        type: string
+    required:
+    - alamat
+    - email
+    - id
+    - name
+    - phone
+    type: object
+  domain.SupplierInput:
+    properties:
+      alamat:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        minLength: 12
+        type: string
+    required:
+    - alamat
+    - email
+    - id
+    - name
+    - phone
+    type: object
+  domain.UserInput:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - role
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/hello:
+    get:
+      description: Return a greeting message to the user
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greet the user
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with username and password to get a JWT token
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.ResponseAuth'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      summary: Login to the application
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create User
+      parameters:
+      - description: User information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      summary: Register to the application
+      tags:
+      - Auth
+  /category:
+    get:
+      description: Retrieve the results for each category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get category results
+      tags:
+      - Category
+  /category/{id}:
+    delete:
+      description: Delete a specific category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete category
+      tags:
+      - Category
+    get:
+      description: Retrieve the result for a specific category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get category result
+      tags:
+      - Category
+    put:
+      description: Update a specific category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update category
+      tags:
+      - Category
+  /category/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Category
+      parameters:
+      - description: Category information
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CategoryInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createCategory to the application
+      tags:
+      - Category
+  /category/hello:
+    get:
+      description: Return a greeting message to the category
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greet the Category
+      tags:
+      - Category
+  /customer:
+    get:
+      description: Retrieve the results for each customer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get customer results
+      tags:
+      - Customer
+  /customer/{id}:
+    delete:
+      description: Delete a specific customer
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete customer
+      tags:
+      - Customer
+    get:
+      description: Retrieve the result for a specific customer
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get customer result
+      tags:
+      - Customer
+    put:
+      description: Update a specific customer
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Customer Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CustomerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update Customer
+      tags:
+      - Customer
+  /customer/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Customer
+      parameters:
+      - description: Customer information
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CustomerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createCustomer to the application
+      tags:
+      - Customer
+  /customer/hello:
+    get:
+      description: Return a greeting message to the customer
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Greet the Customer
+      tags:
+      - Customer
+  /product:
+    get:
+      description: Retrieve the results for each product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get product results
+      tags:
+      - Product
+  /product/{id}:
+    delete:
+      description: Delete a specific product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete product
+      tags:
+      - Product
+    get:
+      description: Retrieve the result for a specific product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get product result
+      tags:
+      - Product
+    put:
+      description: Update a specific product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update product
+      tags:
+      - Product
+  /product/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Product
+      parameters:
+      - description: Product information
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createProduct to the application
+      tags:
+      - product
+  /product/hello:
+    get:
+      description: Return a greeting message to the product
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Greet the Product
+      tags:
+      - Product
+  /productkeluar:
+    get:
+      description: Retrieve the results for each productkeluar
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get productkeluar results
+      tags:
+      - ProductKeluar
+  /productkeluar/{id}:
+    delete:
+      description: Delete a specific productkeluar
+      parameters:
+      - description: ProductKeluar ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete productkeluar
+      tags:
+      - ProductKeluar
+    get:
+      description: Retrieve the result for a specific productkeluar
+      parameters:
+      - description: ProductKeluar ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get productkeluar result
+      tags:
+      - ProductKeluar
+    put:
+      description: Update a specific productkeluar
+      parameters:
+      - description: ProductKeluar ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductKeluar Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductKeluarInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update productkeluar
+      tags:
+      - ProductKeluar
+  /productkeluar/create:
+    post:
+      consumes:
+      - application/json
+      description: Create ProductKeluar
+      parameters:
+      - description: ProductKeluar information
+        in: body
+        name: productkeluar
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductKeluarInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createProductKeluar to the application
+      tags:
+      - ProductKeluar
+  /productmasuk:
+    get:
+      description: Retrieve the results for each productmasuk
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get productmasuk results
+      tags:
+      - ProductMasuk
+  /productmasuk/{id}:
+    delete:
+      description: Delete a specific productmasuk
+      parameters:
+      - description: ProductMasuk ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete productMasuk
+      tags:
+      - ProductMasuk
+    get:
+      description: Retrieve the result for a specific productmasuk
+      parameters:
+      - description: ProductMasuk ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get productmasuk result
+      tags:
+      - ProductMasuk
+    put:
+      description: Update a specific productmasuk
+      parameters:
+      - description: ProductMasuk ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductMasuk Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductMasukInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update productmasuk
+      tags:
+      - ProductMasuk
+  /productmasuk/create:
+    post:
+      consumes:
+      - application/json
+      description: Create ProductMasuk
+      parameters:
+      - description: ProductMasuk information
+        in: body
+        name: productmasuk
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductMasukInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createProductMasuk to the application
+      tags:
+      - ProductMasuk
+  /sale:
+    get:
+      description: Retrieve the results for each sale
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get sale results
+      tags:
+      - Sale
+  /sale/{id}:
+    delete:
+      description: Delete a specific sale
+      parameters:
+      - description: Sale ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete sale
+      tags:
+      - Sale
+    get:
+      description: Retrieve the result for a specific sale
+      parameters:
+      - description: Sale ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get sale result
+      tags:
+      - Sale
+    put:
+      description: Update a specific supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Category Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SupplierInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update supplier
+      tags:
+      - Supplier
+  /sale/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Sale
+      parameters:
+      - description: Sale information
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SaleInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createSale to the application
+      tags:
+      - Sale
+  /supplier:
+    get:
+      description: Retrieve the results for each supplier
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get supplier results
+      tags:
+      - Supplier
+  /supplier/{id}:
+    delete:
+      description: Delete a specific supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete supplier
+      tags:
+      - Supplier
+    get:
+      description: Retrieve the result for a specific supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get supplier result
+      tags:
+      - Supplier
+  /supplier/create:
+    post:
+      consumes:
+      - application/json
+      description: Create Supplier
+      parameters:
+      - description: Supplier information
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SupplierInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: createSupplier to the application
+      tags:
+      - Supplier
+  /users:
+    get:
+      description: Retrieve the results for each USer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get users results
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Delete a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete user
+      tags:
+      - Users
+    get:
+      description: Retrieve the result for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get user result
+      tags:
+      - Users
+    put:
+      description: Update a specific user
+      parameters:
+      - description: Users ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update User
+      tags:
+      - Users
+  /users/hello:
+    get:
+      description: Return a greeting message to the users
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Greet the Users
+      tags:
+      - Users
+swagger: "2.0"

@@ -1,6 +1,10 @@
 package domain
 
-import "github.com/go-playground/validator/v10"
+import (
+	"time"
+
+	"github.com/go-playground/validator/v10"
+)
 
 type UserInput struct {
 	ID        string `json:"id" validate:"uuid"`
@@ -20,4 +24,14 @@ func (c *UserInput) Validate() error {
 	}
 
 	return nil
+}
+
+type UsersResponse struct {
+	ID        string    `json:"id"`
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	Role      string    `json:"role"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

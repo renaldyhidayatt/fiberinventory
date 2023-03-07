@@ -24,5 +24,6 @@ func (h *Handler) Init(api *fiber.App) {
 	h.initProductMasukGroup(api)
 	h.initSaleGroup(api)
 	h.initSupplierGroup(api)
+	h.initUserGroup(api)
 
 }

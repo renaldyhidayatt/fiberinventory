@@ -2,12 +2,15 @@ package v1
 
 import (
 	"fiberinventory/internal/domain"
+	"fiberinventory/internal/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func (h *Handler) initProductMasukGroup(api *fiber.App) {
 	routerProductMasuk := api.Group("/productmasuk")
+
+	routerProductMasuk.Use(middleware.Proctected())
 
 	routerProductMasuk.Get("/", h.handlerProductMasukResults)
 	routerProductMasuk.Get("/:id", h.handlerProductMasukResult)
@@ -17,56 +20,90 @@ func (h *Handler) initProductMasukGroup(api *fiber.App) {
 
 }
 
+// ProductMasukInput function
+// @Summary createProductMasuk to the application
+// @Description Create ProductMasuk
+// @Tags ProductMasuk
+// @Accept json
+// @Produce json
+// @Param productmasuk body domain.ProductMasukInput true "ProductMasuk information"
+// @Security BearerAuth
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.ErrorMessage
+// @Router /productmasuk/create [post]
 func (h *Handler) handlerProductMasukCreate(c *fiber.Ctx) error {
 	var body domain.ProductMasukInput
 
 	if err := c.BodyParser(&body); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
 	if err := body.Validate(); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
 	res, err := h.services.ProductMasuk.Create(&body)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"data":  res,
-		"error": false,
-		"msg":   "create successfully",
+	return c.Status(fiber.StatusOK).JSON(domain.Response{
+		Message:    "berhasil membuat product masuk",
+		Data:       res,
+		StatusCode: fiber.StatusOK,
 	})
 }
 
+// handlerProductMasukResults function
+// @Summary Get productmasuk results
+// @Description Retrieve the results for each productmasuk
+// @Tags ProductMasuk
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.ErrorMessage
+// @Router /productmasuk [get]
 func (h *Handler) handlerProductMasukResults(c *fiber.Ctx) error {
 	res, err := h.services.ProductMasuk.Results()
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"msg":    "productmasuk data ready",
-		"status": true,
-		"data":   res,
+	return c.Status(fiber.StatusOK).JSON(domain.Response{
+		Message:    "berhasil mendapatkan data",
+		Data:       res,
+		StatusCode: fiber.StatusOK,
 	})
 }
 
+// handlerProductMasukResult function
+// @Summary Get productmasuk result
+// @Description Retrieve the result for a specific productmasuk
+// @Tags ProductMasuk
+// @Param id path string true "ProductMasuk ID"
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.ErrorMessage
+// @Router /productmasuk/{id} [get]
 func (h *Handler) handlerProductMasukResult(c *fiber.Ctx) error {
 	var body domain.ProductMasukInput
 
@@ -77,19 +114,30 @@ func (h *Handler) handlerProductMasukResult(c *fiber.Ctx) error {
 	res, err := h.services.ProductMasuk.Result(&body)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"msg":    "ProductMasuk found",
-		"status": true,
-		"data":   res,
+	return c.Status(fiber.StatusOK).JSON(domain.Response{
+		Message:    "berhasil mendapatkan data",
+		Data:       res,
+		StatusCode: fiber.StatusOK,
 	})
 }
 
+// handlerProductMasukDelete function
+// @Summary Delete productMasuk
+// @Description Delete a specific productmasuk
+// @Tags ProductMasuk
+// @Param id path string true "ProductMasuk ID"
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.ErrorMessage
+// @Router /productmasuk/{id} [delete]
 func (h *Handler) handlerProductMasukDelete(c *fiber.Ctx) error {
 	var body domain.ProductMasukInput
 
@@ -99,19 +147,31 @@ func (h *Handler) handlerProductMasukDelete(c *fiber.Ctx) error {
 	res, err := h.services.ProductMasuk.Delete(&body)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"msg":    "Product found",
-		"status": true,
-		"data":   res,
+	return c.Status(fiber.StatusOK).JSON(domain.Response{
+		Message:    "berhasil menghapus productmasuk",
+		Data:       res,
+		StatusCode: fiber.StatusOK,
 	})
 }
 
+// handlerProductMasukUpdate function
+// @Summary Update productmasuk
+// @Description Update a specific productmasuk
+// @Tags ProductMasuk
+// @Param id path string true "ProductMasuk ID"
+// @Param body body domain.ProductMasukInput true "ProductMasuk Data"
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.ErrorMessage
+// @Router /productmasuk/{id} [put]
 func (h *Handler) handlerProductMasukUpdate(c *fiber.Ctx) error {
 	var body domain.ProductMasukInput
 	id := c.Params("id")
@@ -119,30 +179,33 @@ func (h *Handler) handlerProductMasukUpdate(c *fiber.Ctx) error {
 	body.ID = id
 
 	if err := c.BodyParser(&body); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
 	if err := body.Validate(); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 	res, err := h.services.ProductMasuk.Update(&body)
 
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": true,
-			"msg":   err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"msg":  "Update product data success for this id",
-		"code": fiber.StatusCreated,
-		"data": res,
+	return c.Status(fiber.StatusOK).JSON(domain.Response{
+		Message:    "berhasil mengupdate productmasuk",
+		Data:       res,
+		StatusCode: fiber.StatusOK,
 	})
 }

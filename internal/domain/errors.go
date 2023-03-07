@@ -67,3 +67,9 @@ var (
 	ErrorUserNotFound     = errors.New("failed result supplier")
 	ErrorUsersNotFound    = errors.New("failed results supplier")
 )
+
+type ErrorMessage struct {
+	StatusCode int    `json:"statusCode"`
+	Message    string `json:"message"`
+	Error      bool   `json:"error"`
+}
