@@ -15,6 +15,7 @@ import (
 	"syscall"
 
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 // @title FiberInventory
@@ -30,17 +31,17 @@ import (
 
 // Run initializes whole application.
 func Run() {
-	log := logger.New(true)
+
 	err := dotenv.Viper()
 
 	if err != nil {
-		log.Err(err)
+		logger.Error("error", zap.Error(err))
 	}
 
 	db, err := postgres.NewClient()
 
 	if err != nil {
-		log.Err(err)
+		logger.Error("error", zap.Error(err))
 	}
 
 	hashier := hash.NewHashingPassword()
@@ -48,7 +49,7 @@ func Run() {
 	token, err := auth.NewManager(viper.GetString("JWT_SECRET"))
 
 	if err != nil {
-		log.Err(err)
+		logger.Error("error", zap.Error(err))
 	}
 
 	services := service.NewService(service.Deps{
@@ -70,12 +71,12 @@ func Run() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
-	_ = <-c
+	<-c
 	fmt.Println("Gracefully shutting down...")
 	_ = app.Shutdown()
 
 	fmt.Println("Running cleanup tasks...")
 
-	fmt.Println("Fiber was successful shutdown.")
+	fmt.Println("Fiber was successfully shut down.")
 
 }
