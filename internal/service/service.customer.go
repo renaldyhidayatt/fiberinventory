@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceCustomer struct {
+type ServiceCustomer struct {
 	Repository repository.CustomerRepository
 }
 
-func NewServiceCustomer(customer repository.CustomerRepository) *serviceCustomer {
-	return &serviceCustomer{Repository: customer}
+func NewServiceCustomer(customer repository.CustomerRepository) *ServiceCustomer {
+	return &ServiceCustomer{Repository: customer}
 }
 
-func (s *serviceCustomer) Create(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (s *ServiceCustomer) Create(input *domain.CustomerInput) (*models.ModelCustomer, error) {
 	var customer domain.CustomerInput
 	customer.Name = input.Name
 	customer.Telepon = input.Telepon
@@ -26,13 +26,13 @@ func (s *serviceCustomer) Create(input *domain.CustomerInput) (*models.ModelCust
 	return res, err
 }
 
-func (s *serviceCustomer) Results() (*[]models.ModelCustomer, error) {
+func (s *ServiceCustomer) Results() (*[]models.ModelCustomer, error) {
 	res, err := s.Repository.Results()
 
 	return res, err
 }
 
-func (s *serviceCustomer) Result(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (s *ServiceCustomer) Result(input *domain.CustomerInput) (*models.ModelCustomer, error) {
 	var customer domain.CustomerInput
 	customer.ID = input.ID
 
@@ -41,7 +41,7 @@ func (s *serviceCustomer) Result(input *domain.CustomerInput) (*models.ModelCust
 	return res, err
 }
 
-func (s *serviceCustomer) Delete(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (s *ServiceCustomer) Delete(input *domain.CustomerInput) (*models.ModelCustomer, error) {
 	var customer domain.CustomerInput
 	customer.ID = input.ID
 
@@ -50,7 +50,7 @@ func (s *serviceCustomer) Delete(input *domain.CustomerInput) (*models.ModelCust
 	return res, err
 }
 
-func (s *serviceCustomer) Update(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (s *ServiceCustomer) Update(input *domain.CustomerInput) (*models.ModelCustomer, error) {
 	var customer domain.CustomerInput
 	customer.Name = input.Name
 	customer.Telepon = input.Telepon

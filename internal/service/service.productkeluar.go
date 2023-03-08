@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceProductKeluar struct {
+type ServiceProductKeluar struct {
 	Repository repository.ProductKeluarRepository
 }
 
-func NewServiceProductKeluar(productkeluar repository.ProductKeluarRepository) *serviceProductKeluar {
-	return &serviceProductKeluar{Repository: productkeluar}
+func NewServiceProductKeluar(productkeluar repository.ProductKeluarRepository) *ServiceProductKeluar {
+	return &ServiceProductKeluar{Repository: productkeluar}
 }
 
-func (s *serviceProductKeluar) Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (s *ServiceProductKeluar) Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
 	var productkeluar domain.ProductKeluarInput
 
 	productkeluar.Qty = input.Qty
@@ -26,13 +26,13 @@ func (s *serviceProductKeluar) Create(input *domain.ProductKeluarInput) (*models
 	return res, err
 }
 
-func (s *serviceProductKeluar) Results() (*[]models.ModelProductKeluar, error) {
+func (s *ServiceProductKeluar) Results() (*[]models.ModelProductKeluar, error) {
 	res, err := s.Repository.Results()
 
 	return res, err
 }
 
-func (s *serviceProductKeluar) Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (s *ServiceProductKeluar) Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
 	var productkeluar domain.ProductKeluarInput
 	productkeluar.ID = input.ID
 
@@ -41,7 +41,7 @@ func (s *serviceProductKeluar) Result(input *domain.ProductKeluarInput) (*models
 	return res, err
 }
 
-func (s *serviceProductKeluar) Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (s *ServiceProductKeluar) Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
 	var productkeluar domain.ProductKeluarInput
 	productkeluar.ID = input.ID
 
@@ -50,7 +50,7 @@ func (s *serviceProductKeluar) Delete(input *domain.ProductKeluarInput) (*models
 	return res, err
 }
 
-func (s *serviceProductKeluar) Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (s *ServiceProductKeluar) Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
 	var productkeluar domain.ProductKeluarInput
 
 	productkeluar.Qty = input.Qty

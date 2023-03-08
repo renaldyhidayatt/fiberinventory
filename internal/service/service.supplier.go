@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceSupplier struct {
+type ServiceSupplier struct {
 	Repository repository.SupplierRepository
 }
 
-func NewServiceSupplier(supplier repository.SupplierRepository) *serviceSupplier {
-	return &serviceSupplier{Repository: supplier}
+func NewServiceSupplier(supplier repository.SupplierRepository) *ServiceSupplier {
+	return &ServiceSupplier{Repository: supplier}
 }
 
-func (s *serviceSupplier) Create(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (s *ServiceSupplier) Create(input *domain.SupplierInput) (*models.ModelSupplier, error) {
 	var supplier domain.SupplierInput
 	supplier.Name = input.Name
 	supplier.Telepon = input.Telepon
@@ -26,13 +26,13 @@ func (s *serviceSupplier) Create(input *domain.SupplierInput) (*models.ModelSupp
 	return res, err
 }
 
-func (s *serviceSupplier) Results() (*[]models.ModelSupplier, error) {
+func (s *ServiceSupplier) Results() (*[]models.ModelSupplier, error) {
 	res, err := s.Repository.Results()
 
 	return res, err
 }
 
-func (s *serviceSupplier) Result(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (s *ServiceSupplier) Result(input *domain.SupplierInput) (*models.ModelSupplier, error) {
 	var supplier domain.SupplierInput
 	supplier.ID = input.ID
 
@@ -41,7 +41,7 @@ func (s *serviceSupplier) Result(input *domain.SupplierInput) (*models.ModelSupp
 	return res, err
 }
 
-func (s *serviceSupplier) Delete(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (s *ServiceSupplier) Delete(input *domain.SupplierInput) (*models.ModelSupplier, error) {
 	var supplier domain.SupplierInput
 	supplier.ID = input.ID
 
@@ -50,7 +50,7 @@ func (s *serviceSupplier) Delete(input *domain.SupplierInput) (*models.ModelSupp
 	return res, err
 }
 
-func (s *serviceSupplier) Update(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (s *ServiceSupplier) Update(input *domain.SupplierInput) (*models.ModelSupplier, error) {
 	var supplier domain.SupplierInput
 	supplier.Name = input.Name
 	supplier.Telepon = input.Telepon

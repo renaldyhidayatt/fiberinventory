@@ -25,11 +25,10 @@ func (r *repositoryUser) Register(input *domain.UserInput) (*models.ModelUser, e
 
 	db := r.db.Model(&user)
 
-	checkEmailExist := db.Debug().Where("email = ?", input.Email)
+	_, err := r.FindByEmail(input.Email)
 
-	if checkEmailExist.RowsAffected > 0 {
-
-		return &user, domain.ErrorRegisterEmail
+	if err != nil {
+		return nil, domain.ErrorUserNotFound
 	}
 
 	addNewUser := db.Debug().Create(&user).Commit()

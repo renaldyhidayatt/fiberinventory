@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceSale struct {
+type ServiceSale struct {
 	Repository repository.SaleRepository
 }
 
-func NewServiceSale(sale repository.SaleRepository) *serviceSale {
-	return &serviceSale{Repository: sale}
+func NewServiceSale(sale repository.SaleRepository) *ServiceSale {
+	return &ServiceSale{Repository: sale}
 }
 
-func (s *serviceSale) Create(input *domain.SaleInput) (*models.ModelSale, error) {
+func (s *ServiceSale) Create(input *domain.SaleInput) (*models.ModelSale, error) {
 	var sale domain.SaleInput
 
 	sale.Name = input.Name
@@ -27,12 +27,12 @@ func (s *serviceSale) Create(input *domain.SaleInput) (*models.ModelSale, error)
 
 }
 
-func (s *serviceSale) Results() (*[]models.ModelSale, error) {
+func (s *ServiceSale) Results() (*[]models.ModelSale, error) {
 	res, err := s.Repository.Results()
 	return res, err
 }
 
-func (s *serviceSale) Result(input *domain.SaleInput) (*models.ModelSale, error) {
+func (s *ServiceSale) Result(input *domain.SaleInput) (*models.ModelSale, error) {
 	var sale domain.SaleInput
 
 	sale.ID = input.ID
@@ -42,7 +42,7 @@ func (s *serviceSale) Result(input *domain.SaleInput) (*models.ModelSale, error)
 	return res, err
 }
 
-func (s *serviceSale) Delete(input *domain.SaleInput) (*models.ModelSale, error) {
+func (s *ServiceSale) Delete(input *domain.SaleInput) (*models.ModelSale, error) {
 	var sale domain.SaleInput
 
 	sale.ID = input.ID
@@ -52,7 +52,7 @@ func (s *serviceSale) Delete(input *domain.SaleInput) (*models.ModelSale, error)
 	return res, err
 }
 
-func (s *serviceSale) Update(input *domain.SaleInput) (*models.ModelSale, error) {
+func (s *ServiceSale) Update(input *domain.SaleInput) (*models.ModelSale, error) {
 	var sale domain.SaleInput
 	sale.Name = input.Name
 	sale.Telepon = input.Telepon

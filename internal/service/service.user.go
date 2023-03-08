@@ -9,17 +9,17 @@ import (
 	"fmt"
 )
 
-type serviceUser struct {
+type ServiceUser struct {
 	Repository repository.UserRepository
 	Hash       hash.Hashing
 	Token      auth.TokenManager
 }
 
-func NewServiceUser(auth repository.UserRepository, hash hash.Hashing, token auth.TokenManager) *serviceUser {
-	return &serviceUser{Repository: auth, Hash: hash, Token: token}
+func NewServiceUser(auth repository.UserRepository, hash hash.Hashing, token auth.TokenManager) *ServiceUser {
+	return &ServiceUser{Repository: auth, Hash: hash, Token: token}
 }
 
-func (s *serviceUser) Register(input *domain.UserInput) (*models.ModelUser, error) {
+func (s *ServiceUser) Register(input *domain.UserInput) (*models.ModelUser, error) {
 	var schema domain.UserInput
 	schema.FirstName = input.FirstName
 	schema.LastName = input.LastName
@@ -32,7 +32,7 @@ func (s *serviceUser) Register(input *domain.UserInput) (*models.ModelUser, erro
 	return res, err
 }
 
-func (s *serviceUser) Login(input *domain.UserInput) (domain.Token, error) {
+func (s *ServiceUser) Login(input *domain.UserInput) (domain.Token, error) {
 	var schema domain.UserInput
 
 	res, err := s.Repository.FindByEmail(input.Email)
@@ -59,7 +59,7 @@ func (s *serviceUser) Login(input *domain.UserInput) (domain.Token, error) {
 	return s.createJwt(res.ID)
 }
 
-func (s *serviceUser) createJwt(id string) (domain.Token, error) {
+func (s *ServiceUser) createJwt(id string) (domain.Token, error) {
 	var (
 		res domain.Token
 		err error
@@ -74,13 +74,13 @@ func (s *serviceUser) createJwt(id string) (domain.Token, error) {
 	return res, err
 }
 
-func (s *serviceUser) Results() (*[]models.ModelUser, error) {
+func (s *ServiceUser) Results() (*[]models.ModelUser, error) {
 	res, err := s.Repository.Results()
 
 	return res, err
 }
 
-func (s *serviceUser) Result(input *domain.UserInput) (*models.ModelUser, error) {
+func (s *ServiceUser) Result(input *domain.UserInput) (*models.ModelUser, error) {
 	var user domain.UserInput
 
 	user.ID = input.ID
@@ -90,7 +90,7 @@ func (s *serviceUser) Result(input *domain.UserInput) (*models.ModelUser, error)
 	return res, err
 }
 
-func (s *serviceUser) Delete(input *domain.UserInput) (*models.ModelUser, error) {
+func (s *ServiceUser) Delete(input *domain.UserInput) (*models.ModelUser, error) {
 	var user domain.UserInput
 
 	user.ID = input.ID
@@ -100,7 +100,7 @@ func (s *serviceUser) Delete(input *domain.UserInput) (*models.ModelUser, error)
 	return res, err
 }
 
-func (s *serviceUser) Update(input *domain.UserInput) (*models.ModelUser, error) {
+func (s *ServiceUser) Update(input *domain.UserInput) (*models.ModelUser, error) {
 	var user domain.UserInput
 
 	user.ID = input.ID

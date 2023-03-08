@@ -5,6 +5,8 @@ import (
 	"fiberinventory/internal/models"
 )
 
+//go:generate mockgen -source=interfaces.go -destination=mocks/mock.go
+
 type UserRepository interface {
 	Register(input *domain.UserInput) (*models.ModelUser, error)
 	Login(input *domain.UserInput) (*models.ModelUser, error)

@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceProduct struct {
+type ServiceProduct struct {
 	Repository repository.ProductRepository
 }
 
-func NewServiceProduct(product repository.ProductRepository) *serviceProduct {
-	return &serviceProduct{Repository: product}
+func NewServiceProduct(product repository.ProductRepository) *ServiceProduct {
+	return &ServiceProduct{Repository: product}
 }
 
-func (s *serviceProduct) Create(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (s *ServiceProduct) Create(input *domain.ProductInput) (*models.ModelProduct, error) {
 	var product domain.ProductInput
 	product.Name = input.Name
 	product.Image = input.Image
@@ -26,12 +26,12 @@ func (s *serviceProduct) Create(input *domain.ProductInput) (*models.ModelProduc
 	return res, err
 }
 
-func (s *serviceProduct) Results() (*[]models.ModelProduct, error) {
+func (s *ServiceProduct) Results() (*[]models.ModelProduct, error) {
 	res, err := s.Repository.Results()
 	return res, err
 }
 
-func (s *serviceProduct) Result(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (s *ServiceProduct) Result(input *domain.ProductInput) (*models.ModelProduct, error) {
 	var product domain.ProductInput
 	product.ID = input.ID
 
@@ -40,7 +40,7 @@ func (s *serviceProduct) Result(input *domain.ProductInput) (*models.ModelProduc
 	return res, err
 }
 
-func (s *serviceProduct) Delete(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (s *ServiceProduct) Delete(input *domain.ProductInput) (*models.ModelProduct, error) {
 	var product domain.ProductInput
 	product.ID = input.ID
 
@@ -49,7 +49,7 @@ func (s *serviceProduct) Delete(input *domain.ProductInput) (*models.ModelProduc
 	return res, err
 }
 
-func (s *serviceProduct) Update(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (s *ServiceProduct) Update(input *domain.ProductInput) (*models.ModelProduct, error) {
 	var product domain.ProductInput
 
 	product.Name = input.Name

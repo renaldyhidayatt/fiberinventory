@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceCategory struct {
+type ServiceCategory struct {
 	Repository repository.CategoryRepository
 }
 
-func NewServiceCategory(category repository.CategoryRepository) *serviceCategory {
-	return &serviceCategory{Repository: category}
+func NewServiceCategory(category repository.CategoryRepository) *ServiceCategory {
+	return &ServiceCategory{Repository: category}
 }
 
-func (s *serviceCategory) Create(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (s *ServiceCategory) Create(input *domain.CategoryInput) (*models.ModelCategory, error) {
 	var category domain.CategoryInput
 	category.Name = input.Name
 
@@ -22,13 +22,13 @@ func (s *serviceCategory) Create(input *domain.CategoryInput) (*models.ModelCate
 	return res, err
 }
 
-func (s *serviceCategory) Results() (*[]models.ModelCategory, error) {
+func (s *ServiceCategory) Results() (*[]models.ModelCategory, error) {
 	res, err := s.Repository.Results()
 
 	return res, err
 }
 
-func (s *serviceCategory) Result(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (s *ServiceCategory) Result(input *domain.CategoryInput) (*models.ModelCategory, error) {
 	var category domain.CategoryInput
 	category.ID = input.ID
 
@@ -37,7 +37,7 @@ func (s *serviceCategory) Result(input *domain.CategoryInput) (*models.ModelCate
 	return res, err
 }
 
-func (s *serviceCategory) Delete(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (s *ServiceCategory) Delete(input *domain.CategoryInput) (*models.ModelCategory, error) {
 	var category domain.CategoryInput
 	category.ID = input.ID
 
@@ -46,7 +46,7 @@ func (s *serviceCategory) Delete(input *domain.CategoryInput) (*models.ModelCate
 	return res, err
 }
 
-func (s *serviceCategory) Update(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (s *ServiceCategory) Update(input *domain.CategoryInput) (*models.ModelCategory, error) {
 	var category domain.CategoryInput
 	category.Name = input.Name
 

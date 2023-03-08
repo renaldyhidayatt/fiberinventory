@@ -6,15 +6,15 @@ import (
 	"fiberinventory/internal/repository"
 )
 
-type serviceProductMasuk struct {
+type ServiceProductMasuk struct {
 	Repository repository.ProductMasukRepository
 }
 
-func NewServiceProductMasuk(productmasuk repository.ProductMasukRepository) *serviceProductMasuk {
-	return &serviceProductMasuk{Repository: productmasuk}
+func NewServiceProductMasuk(productmasuk repository.ProductMasukRepository) *ServiceProductMasuk {
+	return &ServiceProductMasuk{Repository: productmasuk}
 }
 
-func (s *serviceProductMasuk) Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (s *ServiceProductMasuk) Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
 	var productmasuk domain.ProductMasukInput
 
 	productmasuk.Name = input.Name
@@ -27,13 +27,13 @@ func (s *serviceProductMasuk) Create(input *domain.ProductMasukInput) (*models.M
 	return res, err
 }
 
-func (s *serviceProductMasuk) Results() (*[]models.ModelProductMasuk, error) {
+func (s *ServiceProductMasuk) Results() (*[]models.ModelProductMasuk, error) {
 	res, err := s.Repository.Results()
 
 	return res, err
 }
 
-func (s *serviceProductMasuk) Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (s *ServiceProductMasuk) Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
 	var productmasuk domain.ProductMasukInput
 	productmasuk.ID = input.ID
 
@@ -43,7 +43,7 @@ func (s *serviceProductMasuk) Result(input *domain.ProductMasukInput) (*models.M
 
 }
 
-func (s *serviceProductMasuk) Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (s *ServiceProductMasuk) Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
 	var productmasuk domain.ProductMasukInput
 	productmasuk.ID = input.ID
 
@@ -52,7 +52,7 @@ func (s *serviceProductMasuk) Delete(input *domain.ProductMasukInput) (*models.M
 	return res, err
 }
 
-func (s *serviceProductMasuk) Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (s *ServiceProductMasuk) Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
 	var productmasuk domain.ProductMasukInput
 
 	productmasuk.Name = input.Name
