@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestProductKeluarRepository_Create(t *testing.T) {
@@ -19,7 +19,7 @@ func TestProductKeluarRepository_Create(t *testing.T) {
 	myUuid := uuid.NewString()
 
 	mockRepo := mocks.NewMockProductKeluarRepository(mockCtrl)
-	productKeluarInput := &domain.ProductKeluarInput{ID: myUuid, Qty: "5", ProductID: myUuid, CategoryID: myUuid}
+	productKeluarInput := &domain.CreateProductKeluarRequest{ID: myUuid, Qty: "5", ProductID: myUuid, CategoryID: myUuid}
 
 	expectedModel := &models.ModelProductKeluar{Qty: "5", ProductID: myUuid, CategoryID: myUuid}
 
@@ -38,17 +38,15 @@ func TestProductKeluarRepository_Result(t *testing.T) {
 	myUuid := uuid.NewString()
 	mockRepo := mocks.NewMockProductKeluarRepository(mockCtrl)
 
-	input := &domain.ProductKeluarInput{ID: myUuid}
-
 	expectedModel := &models.ModelProductKeluar{
 		ID: myUuid, Qty: "5", ProductID: myUuid, CategoryID: myUuid,
 	}
 
-	mockRepo.EXPECT().Result(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Result(myUuid).Return(expectedModel, nil)
 
 	productService := &service.ServiceProductKeluar{Repository: mockRepo}
 
-	resultModel, err := productService.Result(input)
+	resultModel, err := productService.Result(myUuid)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -87,13 +85,12 @@ func TestProductKeluarRepository_Delete(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	input := &domain.ProductKeluarInput{ID: myUuid}
 	expectedModel := &models.ModelProductKeluar{ID: myUuid, Qty: "5", ProductID: myUuid, CategoryID: myUuid}
 
-	mockRepo.EXPECT().Delete(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Delete(myUuid).Return(expectedModel, nil)
 
 	productService := service.ServiceProductKeluar{Repository: mockRepo}
-	deletedModel, err := productService.Delete(input)
+	deletedModel, err := productService.Delete(myUuid)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -107,7 +104,7 @@ func TestProductKeluarRepository_Update(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	productKeluarInput := &domain.ProductKeluarInput{ID: myUuid, Qty: "5", ProductID: myUuid, CategoryID: myUuid}
+	productKeluarInput := &domain.UpdateProductKeluarRequest{ID: myUuid, Qty: "5", ProductID: myUuid, CategoryID: myUuid}
 
 	expectedModel := &models.ModelProductKeluar{Qty: "5", ProductID: myUuid, CategoryID: myUuid}
 

@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestProductRepository_Create(t *testing.T) {
@@ -19,7 +19,7 @@ func TestProductRepository_Create(t *testing.T) {
 	myUuid := uuid.NewString()
 
 	mockProductRepository := mocks.NewMockProductRepository(mockCtrl)
-	productInput := &domain.ProductInput{Name: "TestCategory", Image: "ikan.png", Qty: "5", ID: myUuid}
+	productInput := &domain.CreateProductRequest{Name: "TestCategory", Image: "ikan.png", Qty: "5"}
 
 	expectedModel := &models.ModelProduct{Name: "TestCategory", Image: "ikan.png", Qty: "5", CategoryID: myUuid, ID: myUuid}
 
@@ -39,18 +39,16 @@ func TestProductRepository_Result(t *testing.T) {
 
 	mockRepo := mocks.NewMockProductRepository(mockCtrl)
 
-	input := &domain.ProductInput{ID: myUuid}
-
 	expectedModel := &models.ModelProduct{
 		ID:   myUuid,
 		Name: "TestCategory", Image: "ikan.png", Qty: "5", CategoryID: myUuid,
 	}
 
-	mockRepo.EXPECT().Result(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Result(myUuid).Return(expectedModel, nil)
 
 	productService := &service.ServiceProduct{Repository: mockRepo}
 
-	resultModel, err := productService.Result(input)
+	resultModel, err := productService.Result(myUuid)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -89,13 +87,12 @@ func TestProductRepository_Delete(t *testing.T) {
 
 	mockRepo := mocks.NewMockProductRepository(mockCtrl)
 
-	input := &domain.ProductInput{ID: myUuid}
 	expectedModel := &models.ModelProduct{ID: myUuid, Name: "TestCategory", Image: "ikan.png", Qty: "5", CategoryID: myUuid}
 
-	mockRepo.EXPECT().Delete(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Delete(myUuid).Return(expectedModel, nil)
 
 	productService := service.ServiceProduct{Repository: mockRepo}
-	deletedModel, err := productService.Delete(input)
+	deletedModel, err := productService.Delete(myUuid)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -109,7 +106,7 @@ func TestProductRepository_Update(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	productInput := &domain.ProductInput{Name: "TestCategory", Image: "ikan.png", Qty: "5", ID: myUuid}
+	productInput := &domain.UpdateProductRequest{Name: "TestCategory", Image: "ikan.png", Qty: "5", ID: myUuid}
 
 	expectedModel := &models.ModelProduct{Name: "TestCategory", Image: "ikan.png", Qty: "5", CategoryID: myUuid, ID: myUuid}
 

@@ -15,7 +15,7 @@ func NewRepositoryCategory(db *gorm.DB) *repositoryCategory {
 	return &repositoryCategory{db: db}
 }
 
-func (r *repositoryCategory) Create(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (r *repositoryCategory) Create(input *domain.CreateCategoryRequest) (*models.ModelCategory, error) {
 	var category models.ModelCategory
 
 	category.Name = input.Name
@@ -52,10 +52,10 @@ func (r *repositoryCategory) Results() (*[]models.ModelCategory, error) {
 	return &category, nil
 }
 
-func (r *repositoryCategory) Result(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (r *repositoryCategory) Result(id string) (*models.ModelCategory, error) {
 	var category models.ModelCategory
 
-	category.ID = input.ID
+	category.ID = id
 
 	db := r.db.Model(&category)
 
@@ -68,9 +68,9 @@ func (r *repositoryCategory) Result(input *domain.CategoryInput) (*models.ModelC
 
 }
 
-func (r *repositoryCategory) Delete(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (r *repositoryCategory) Delete(id string) (*models.ModelCategory, error) {
 	var category models.ModelCategory
-	category.ID = input.ID
+	category.ID = id
 
 	db := r.db.Model(&category)
 
@@ -90,7 +90,7 @@ func (r *repositoryCategory) Delete(input *domain.CategoryInput) (*models.ModelC
 	return &category, nil
 }
 
-func (r *repositoryCategory) Update(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (r *repositoryCategory) Update(input *domain.UpdateCategoryRequest) (*models.ModelCategory, error) {
 	var category models.ModelCategory
 
 	category.ID = input.ID

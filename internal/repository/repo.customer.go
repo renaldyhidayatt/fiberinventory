@@ -15,7 +15,7 @@ func NewRepositoryCustomer(db *gorm.DB) *repositoryCustomer {
 	return &repositoryCustomer{db: db}
 }
 
-func (r *repositoryCustomer) Create(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (r *repositoryCustomer) Create(input *domain.CreateCustomerRequest) (*models.ModelCustomer, error) {
 	var customer models.ModelCustomer
 
 	customer.Name = input.Name
@@ -55,9 +55,10 @@ func (r *repositoryCustomer) Results() (*[]models.ModelCustomer, error) {
 	return &customer, nil
 }
 
-func (r *repositoryCustomer) Result(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (r *repositoryCustomer) Result(id string) (*models.ModelCustomer, error) {
 	var customer models.ModelCustomer
-	customer.ID = input.ID
+
+	customer.ID = id
 
 	db := r.db.Model(&customer)
 
@@ -71,9 +72,9 @@ func (r *repositoryCustomer) Result(input *domain.CustomerInput) (*models.ModelC
 	return &customer, nil
 }
 
-func (r *repositoryCustomer) Delete(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (r *repositoryCustomer) Delete(id string) (*models.ModelCustomer, error) {
 	var customer models.ModelCustomer
-	customer.ID = input.ID
+	customer.ID = id
 
 	db := r.db.Model(&customer)
 
@@ -93,7 +94,7 @@ func (r *repositoryCustomer) Delete(input *domain.CustomerInput) (*models.ModelC
 	return &customer, nil
 }
 
-func (r *repositoryCustomer) Update(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (r *repositoryCustomer) Update(input *domain.UpdateCustomerRequest) (*models.ModelCustomer, error) {
 	var customer models.ModelCustomer
 
 	customer.ID = input.ID

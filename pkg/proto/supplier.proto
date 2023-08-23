@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+
+import "google/protobuf/timestamp.proto";
+
+message Supplier {
+    string id = 1;
+    string name = 2;
+    string alamat = 3;
+    string email = 4;
+    string telepon = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+message SuppliersRequest {}
+
+message SupplierResponse {
+    Supplier supplier = 1;
+}
+
+message SuppliersResponse {
+    repeated Supplier suppliers = 1;
+}
+
+message CreateSupplierInput {
+    string name = 1;
+    string alamat = 2;
+    string email = 3;
+    string telepon = 4;
+}
+
+message UpdateSupplierInput {
+    string id = 1;
+    string name = 2;
+    string alamat = 3;
+    string email = 4;
+    string telepon = 5;
+}
+
+message SupplierRequest {
+    string id = 1;
+}
+
+message DeleteSupplierResponse {
+    bool success = 1;
+}
+
+service SupplierService {
+    rpc CreateSupplier(CreateSupplierInput) returns (SupplierResponse) {}
+    rpc GetSuppliers(SuppliersRequest) returns (SuppliersResponse) {}
+    rpc GetSupplier(SupplierRequest) returns (SupplierResponse) {}
+    rpc UpdateSupplier(UpdateSupplierInput) returns (SupplierResponse) {}
+    rpc DeleteSupplier(SupplierRequest) returns (DeleteSupplierResponse) {}
+}

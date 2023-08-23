@@ -14,8 +14,9 @@ func NewServiceProduct(product repository.ProductRepository) *ServiceProduct {
 	return &ServiceProduct{Repository: product}
 }
 
-func (s *ServiceProduct) Create(input *domain.ProductInput) (*models.ModelProduct, error) {
-	var product domain.ProductInput
+func (s *ServiceProduct) Create(input *domain.CreateProductRequest) (*models.ModelProduct, error) {
+	var product domain.CreateProductRequest
+
 	product.Name = input.Name
 	product.Image = input.Image
 	product.Qty = input.Qty
@@ -31,26 +32,22 @@ func (s *ServiceProduct) Results() (*[]models.ModelProduct, error) {
 	return res, err
 }
 
-func (s *ServiceProduct) Result(input *domain.ProductInput) (*models.ModelProduct, error) {
-	var product domain.ProductInput
-	product.ID = input.ID
+func (s *ServiceProduct) Result(id string) (*models.ModelProduct, error) {
 
-	res, err := s.Repository.Result(&product)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 }
 
-func (s *ServiceProduct) Delete(input *domain.ProductInput) (*models.ModelProduct, error) {
-	var product domain.ProductInput
-	product.ID = input.ID
+func (s *ServiceProduct) Delete(id string) (*models.ModelProduct, error) {
 
-	res, err := s.Repository.Delete(&product)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceProduct) Update(input *domain.ProductInput) (*models.ModelProduct, error) {
-	var product domain.ProductInput
+func (s *ServiceProduct) Update(input *domain.UpdateProductRequest) (*models.ModelProduct, error) {
+	var product domain.UpdateProductRequest
 
 	product.Name = input.Name
 	product.Image = input.Image

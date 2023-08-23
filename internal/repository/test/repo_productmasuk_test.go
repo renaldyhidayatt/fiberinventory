@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestProductMasukRepository_Create(t *testing.T) {
@@ -19,7 +19,7 @@ func TestProductMasukRepository_Create(t *testing.T) {
 	myUuid := uuid.NewString()
 
 	mockRepo := mocks.NewMockProductMasukRepository(mockCtrl)
-	ProductMasukInput := &domain.ProductMasukInput{ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
+	ProductMasukInput := &domain.CreateProductMasukRequest{Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
 
 	expectedModel := &models.ModelProductMasuk{ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
 
@@ -38,17 +38,15 @@ func TestProductMasukRepository_Result(t *testing.T) {
 	mockRepo := mocks.NewMockProductMasukRepository(mockCtrl)
 	myUuid := uuid.NewString()
 
-	input := &domain.ProductMasukInput{ID: myUuid}
-
 	expectedModel := &models.ModelProductMasuk{
 		ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid,
 	}
 
-	mockRepo.EXPECT().Result(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Result(myUuid).Return(expectedModel, nil)
 
 	productMasukService := &service.ServiceProductMasuk{Repository: mockRepo}
 
-	resultModel, err := productMasukService.Result(input)
+	resultModel, err := productMasukService.Result(myUuid)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -85,13 +83,12 @@ func TestProductMasukRepository_Delete(t *testing.T) {
 	mockRepo := mocks.NewMockProductMasukRepository(mockCtrl)
 	myUuid := uuid.NewString()
 
-	input := &domain.ProductMasukInput{ID: myUuid}
 	expectedModel := &models.ModelProductMasuk{ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
 
-	mockRepo.EXPECT().Delete(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Delete(myUuid).Return(expectedModel, nil)
 
 	productMasukService := service.ServiceProductMasuk{Repository: mockRepo}
-	deletedModel, err := productMasukService.Delete(input)
+	deletedModel, err := productMasukService.Delete(myUuid)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -104,7 +101,7 @@ func TestProductMasukRepository_Update(t *testing.T) {
 	mockRepo := mocks.NewMockProductMasukRepository(mockCtrl)
 	myUuid := uuid.NewString()
 
-	ProductMasukInput := &domain.ProductMasukInput{ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
+	ProductMasukInput := &domain.UpdateProductMasukRequest{ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
 
 	expectedModel := &models.ModelProductMasuk{ID: myUuid, Name: "TestProductMasuk", Qty: "5", ProductID: myUuid, SupplierID: myUuid}
 

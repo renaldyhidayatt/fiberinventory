@@ -1,23 +1,32 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
 	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initCategoryGroup(api *fiber.App) {
-	routerCategory := api.Group("/category")
+type handleCategory struct {
+	client pb.CategoryServiceClient
+}
 
+func NewHandlerCategory(client pb.CategoryServiceClient, router *fiber.App) {
+	handlerCategory := handleCategory{
+		client: client,
+	}
+
+	routerCategory := router.Group("/api/category")
 	routerCategory.Use(middleware.Proctected())
 
-	routerCategory.Get("/hello", h.handlerCategoryHello)
-	routerCategory.Post("/create", h.handlerCategoryCreate)
-	routerCategory.Put("/update/:id", h.handlerCategoryUpdate)
-	routerCategory.Delete("/delete/:id", h.handlerCategoryDelete)
-	routerCategory.Get("/", h.handleCategoryResults)
-	routerCategory.Get("/:id", h.handlerCategoryResult)
+	routerCategory.Get("/hello", handlerCategory.handlerCategoryHello)
+	routerCategory.Post("/create", handlerCategory.handlerCategoryCreate)
+	routerCategory.Put("/update/:id", handlerCategory.handlerCategoryUpdate)
+	routerCategory.Delete("/delete/:id", handlerCategory.handlerCategoryDelete)
+	routerCategory.Get("/", handlerCategory.handleCategoryResults)
+	routerCategory.Get("/:id", handlerCategory.handlerCategoryResult)
+
 }
 
 // handlerCategoryHello function
@@ -27,7 +36,7 @@ func (h *Handler) initCategoryGroup(api *fiber.App) {
 // @Produce plain
 // @Success 200 {string} string "OK"
 // @Router /category/hello [get]
-func (h *Handler) handlerCategoryHello(c *fiber.Ctx) error {
+func (h *handleCategory) handlerCategoryHello(c *fiber.Ctx) error {
 	return c.SendString("Handler Category")
 }
 
@@ -37,13 +46,14 @@ func (h *Handler) handlerCategoryHello(c *fiber.Ctx) error {
 // @Tags Category
 // @Accept json
 // @Produce json
-// @Param body body domain.CategoryInput true "Category information"
+// @Param body body domain.CreateCategoryRequest true "Category information"
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /category/create [post]
-func (h *Handler) handlerCategoryCreate(c *fiber.Ctx) error {
-	var body domain.CategoryInput
+func (h *handleCategory) handlerCategoryCreate(c *fiber.Ctx) error {
+	var body domain.CreateCategoryRequest
+
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
 			Error:      true,
@@ -60,7 +70,11 @@ func (h *Handler) handlerCategoryCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Category.Create(&body)
+	data := &pb.CreateCategoryInput{
+		Name: body.Name,
+	}
+
+	res, err := h.client.CreateCategory(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -86,8 +100,9 @@ func (h *Handler) handlerCategoryCreate(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /category [get]
-func (h *Handler) handleCategoryResults(c *fiber.Ctx) error {
-	res, err := h.services.Category.Results()
+func (h *handleCategory) handleCategoryResults(c *fiber.Ctx) error {
+
+	res, err := h.client.GetCategories(c.Context(), &pb.CategoriesRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -114,13 +129,15 @@ func (h *Handler) handleCategoryResults(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /category/{id} [get]
-func (h *Handler) handlerCategoryResult(c *fiber.Ctx) error {
-	var body domain.CategoryInput
+func (h *handleCategory) handlerCategoryResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.Category.Result(&body)
+	data := &pb.CategoryRequest{
+		Id: id,
+	}
+
+	res, err := h.client.GetCategory(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -137,52 +154,20 @@ func (h *Handler) handlerCategoryResult(c *fiber.Ctx) error {
 	})
 }
 
-// handlerCategoryDelete function
-// @Summary Delete category
-// @Description Delete a specific category
-// @Tags Category
-// @Param id path string true "Category ID"
-// @Security BearerAuth
-// @Produce json
-// @Success 200 {object} domain.Response
-// @Failure 400 {object} domain.ErrorMessage
-// @Router /category/{id} [delete]
-func (h *Handler) handlerCategoryDelete(c *fiber.Ctx) error {
-	var body domain.CategoryInput
-
-	id := c.Params("id")
-	body.ID = id
-
-	res, err := h.services.Category.Delete(&body)
-
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
-			Error:      true,
-			Message:    err.Error(),
-			StatusCode: fiber.StatusBadRequest,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(domain.Response{
-		Message:    "berhasil menghapus category",
-		Data:       res,
-		StatusCode: fiber.StatusOK,
-	})
-}
-
 // handlerCategoryUpdate function
 // @Summary Update category
 // @Description Update a specific category
 // @Tags Category
 // @Param id path string true "Category ID"
-// @Param body body domain.CategoryInput true "Category Data"
+// @Param body body domain.UpdateCategoryRequest true "Category Data"
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /category/{id} [put]
-func (h *Handler) handlerCategoryUpdate(c *fiber.Ctx) error {
-	var body domain.CategoryInput
+func (h *handleCategory) handlerCategoryUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateCategoryRequest
+
 	id := c.Params("id")
 
 	body.ID = id
@@ -203,7 +188,12 @@ func (h *Handler) handlerCategoryUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Category.Update(&body)
+	data := &pb.UpdateCategoryInput{
+		Id:   body.ID,
+		Name: body.Name,
+	}
+
+	res, err := h.client.UpdateCategory(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -215,6 +205,41 @@ func (h *Handler) handlerCategoryUpdate(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(domain.Response{
 		Message:    "berhasil mengupdate category",
+		Data:       res,
+		StatusCode: fiber.StatusOK,
+	})
+}
+
+// handlerCategoryDelete function
+// @Summary Delete category
+// @Description Delete a specific category
+// @Tags Category
+// @Param id path string true "Category ID"
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {object} domain.Response
+// @Failure 400 {object} domain.ErrorMessage
+// @Router /category/{id} [delete]
+func (h *handleCategory) handlerCategoryDelete(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+
+	data := &pb.CategoryRequest{
+		Id: id,
+	}
+
+	res, err := h.client.DeleteCategory(c.Context(), data)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
+			Error:      true,
+			Message:    err.Error(),
+			StatusCode: fiber.StatusBadRequest,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(domain.Response{
+		Message:    "berhasil menghapus category",
 		Data:       res,
 		StatusCode: fiber.StatusOK,
 	})

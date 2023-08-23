@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestSaleRepository_Create(t *testing.T) {
@@ -20,7 +20,7 @@ func TestSaleRepository_Create(t *testing.T) {
 
 	mockSaleRepo := mocks.NewMockSaleRepository(mockCtrl)
 
-	SaleInput := &domain.SaleInput{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
+	SaleInput := &domain.CreateSaleRequest{Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 	expectedModel := &models.ModelSale{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
 	mockSaleRepo.EXPECT().Create(SaleInput).Return(expectedModel, nil)
@@ -39,15 +39,13 @@ func TestSaleRepository_Result(t *testing.T) {
 
 	mockSaleRepo := mocks.NewMockSaleRepository(mockCtrl)
 
-	SaleInput := &domain.SaleInput{ID: myUuid}
-
 	expectedModel := &models.ModelSale{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
-	mockSaleRepo.EXPECT().Result(SaleInput).Return(expectedModel, nil)
+	mockSaleRepo.EXPECT().Result(myUuid).Return(expectedModel, nil)
 
 	saleService := &service.ServiceSale{Repository: mockSaleRepo}
 
-	resultModel, err := saleService.Result(SaleInput)
+	resultModel, err := saleService.Result(myUuid)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -84,14 +82,12 @@ func TestSaleRepository_Delete(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	SaleInput := &domain.SaleInput{ID: myUuid}
-
 	expectedModel := &models.ModelSale{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
-	mockRepo.EXPECT().Delete(SaleInput).Return(expectedModel, nil)
+	mockRepo.EXPECT().Delete(myUuid).Return(expectedModel, nil)
 
 	saleService := service.ServiceSale{Repository: mockRepo}
-	deletedModel, err := saleService.Delete(SaleInput)
+	deletedModel, err := saleService.Delete(myUuid)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -105,7 +101,7 @@ func TestSaleRepository_Update(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	SaleInput := &domain.SaleInput{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
+	SaleInput := &domain.UpdateSaleRequest{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
 	expectedModel := &models.ModelSale{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 

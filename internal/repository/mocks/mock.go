@@ -9,7 +9,7 @@ import (
 	models "fiberinventory/internal/models"
 	reflect "reflect"
 
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockUserRepository is a mock of UserRepository interface.
@@ -36,18 +36,18 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // Delete mocks base method.
-func (m *MockUserRepository) Delete(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserRepository) Delete(id string) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockUserRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockUserRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserRepository)(nil).Delete), id)
 }
 
 // FindByEmail mocks base method.
@@ -66,7 +66,7 @@ func (mr *MockUserRepositoryMockRecorder) FindByEmail(email interface{}) *gomock
 }
 
 // Login mocks base method.
-func (m *MockUserRepository) Login(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserRepository) Login(input *domain.LoginInput) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", input)
 	ret0, _ := ret[0].(*models.ModelUser)
@@ -81,7 +81,7 @@ func (mr *MockUserRepositoryMockRecorder) Login(input interface{}) *gomock.Call 
 }
 
 // Register mocks base method.
-func (m *MockUserRepository) Register(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserRepository) Register(input *domain.RegisterInput) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", input)
 	ret0, _ := ret[0].(*models.ModelUser)
@@ -96,18 +96,18 @@ func (mr *MockUserRepositoryMockRecorder) Register(input interface{}) *gomock.Ca
 }
 
 // Result mocks base method.
-func (m *MockUserRepository) Result(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserRepository) Result(id string) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockUserRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockUserRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockUserRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockUserRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -126,7 +126,7 @@ func (mr *MockUserRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockUserRepository) Update(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserRepository) Update(input *domain.UpdateUserRequest) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelUser)
@@ -164,7 +164,7 @@ func (m *MockCategoryRepository) EXPECT() *MockCategoryRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockCategoryRepository) Create(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryRepository) Create(input *domain.CreateCategoryRequest) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelCategory)
@@ -179,33 +179,33 @@ func (mr *MockCategoryRepositoryMockRecorder) Create(input interface{}) *gomock.
 }
 
 // Delete mocks base method.
-func (m *MockCategoryRepository) Delete(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryRepository) Delete(id string) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelCategory)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockCategoryRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockCategoryRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCategoryRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCategoryRepository)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockCategoryRepository) Result(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryRepository) Result(id string) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelCategory)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockCategoryRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockCategoryRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCategoryRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCategoryRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -224,7 +224,7 @@ func (mr *MockCategoryRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockCategoryRepository) Update(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryRepository) Update(input *domain.UpdateCategoryRequest) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelCategory)
@@ -262,7 +262,7 @@ func (m *MockCustomerRepository) EXPECT() *MockCustomerRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockCustomerRepository) Create(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerRepository) Create(input *domain.CreateCustomerRequest) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelCustomer)
@@ -277,33 +277,33 @@ func (mr *MockCustomerRepositoryMockRecorder) Create(input interface{}) *gomock.
 }
 
 // Delete mocks base method.
-func (m *MockCustomerRepository) Delete(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerRepository) Delete(od string) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", od)
 	ret0, _ := ret[0].(*models.ModelCustomer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockCustomerRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockCustomerRepositoryMockRecorder) Delete(od interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCustomerRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCustomerRepository)(nil).Delete), od)
 }
 
 // Result mocks base method.
-func (m *MockCustomerRepository) Result(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerRepository) Result(id string) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelCustomer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockCustomerRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockCustomerRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCustomerRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCustomerRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -322,7 +322,7 @@ func (mr *MockCustomerRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockCustomerRepository) Update(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerRepository) Update(input *domain.UpdateCustomerRequest) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelCustomer)
@@ -360,7 +360,7 @@ func (m *MockProductRepository) EXPECT() *MockProductRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockProductRepository) Create(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductRepository) Create(input *domain.CreateProductRequest) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelProduct)
@@ -375,33 +375,33 @@ func (mr *MockProductRepositoryMockRecorder) Create(input interface{}) *gomock.C
 }
 
 // Delete mocks base method.
-func (m *MockProductRepository) Delete(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductRepository) Delete(id string) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelProduct)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockProductRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductRepository)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockProductRepository) Result(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductRepository) Result(id string) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelProduct)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockProductRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockProductRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -420,7 +420,7 @@ func (mr *MockProductRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockProductRepository) Update(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductRepository) Update(input *domain.UpdateProductRequest) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelProduct)
@@ -458,7 +458,7 @@ func (m *MockProductKeluarRepository) EXPECT() *MockProductKeluarRepositoryMockR
 }
 
 // Create mocks base method.
-func (m *MockProductKeluarRepository) Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarRepository) Create(input *domain.CreateProductKeluarRequest) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
@@ -473,33 +473,33 @@ func (mr *MockProductKeluarRepositoryMockRecorder) Create(input interface{}) *go
 }
 
 // Delete mocks base method.
-func (m *MockProductKeluarRepository) Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarRepository) Delete(id string) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductKeluarRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockProductKeluarRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductKeluarRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductKeluarRepository)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockProductKeluarRepository) Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarRepository) Result(id string) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockProductKeluarRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockProductKeluarRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductKeluarRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductKeluarRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -518,7 +518,7 @@ func (mr *MockProductKeluarRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockProductKeluarRepository) Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarRepository) Update(input *domain.UpdateProductKeluarRequest) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
@@ -556,7 +556,7 @@ func (m *MockProductMasukRepository) EXPECT() *MockProductMasukRepositoryMockRec
 }
 
 // Create mocks base method.
-func (m *MockProductMasukRepository) Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukRepository) Create(input *domain.CreateProductMasukRequest) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
@@ -571,33 +571,33 @@ func (mr *MockProductMasukRepositoryMockRecorder) Create(input interface{}) *gom
 }
 
 // Delete mocks base method.
-func (m *MockProductMasukRepository) Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukRepository) Delete(id string) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductMasukRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockProductMasukRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductMasukRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductMasukRepository)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockProductMasukRepository) Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukRepository) Result(id string) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockProductMasukRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockProductMasukRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductMasukRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductMasukRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -616,7 +616,7 @@ func (mr *MockProductMasukRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockProductMasukRepository) Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukRepository) Update(input *domain.UpdateProductMasukRequest) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
@@ -654,7 +654,7 @@ func (m *MockSaleRepository) EXPECT() *MockSaleRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockSaleRepository) Create(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleRepository) Create(input *domain.CreateSaleRequest) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelSale)
@@ -669,33 +669,33 @@ func (mr *MockSaleRepositoryMockRecorder) Create(input interface{}) *gomock.Call
 }
 
 // Delete mocks base method.
-func (m *MockSaleRepository) Delete(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleRepository) Delete(id string) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelSale)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockSaleRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockSaleRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSaleRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSaleRepository)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockSaleRepository) Result(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleRepository) Result(id string) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelSale)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockSaleRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockSaleRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSaleRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSaleRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -714,7 +714,7 @@ func (mr *MockSaleRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockSaleRepository) Update(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleRepository) Update(input *domain.UpdateSaleRequest) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelSale)
@@ -752,7 +752,7 @@ func (m *MockSupplierRepository) EXPECT() *MockSupplierRepositoryMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockSupplierRepository) Create(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierRepository) Create(input *domain.CreateSupplierRequest) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelSupplier)
@@ -767,33 +767,33 @@ func (mr *MockSupplierRepositoryMockRecorder) Create(input interface{}) *gomock.
 }
 
 // Delete mocks base method.
-func (m *MockSupplierRepository) Delete(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierRepository) Delete(id string) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelSupplier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockSupplierRepositoryMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockSupplierRepositoryMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSupplierRepository)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSupplierRepository)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockSupplierRepository) Result(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierRepository) Result(id string) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelSupplier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockSupplierRepositoryMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockSupplierRepositoryMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSupplierRepository)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSupplierRepository)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -812,7 +812,7 @@ func (mr *MockSupplierRepositoryMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockSupplierRepository) Update(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierRepository) Update(input *domain.UpdateSupplierRequest) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelSupplier)

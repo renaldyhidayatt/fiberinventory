@@ -1,38 +1,58 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
 	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initProductKeluarGroup(api *fiber.App) {
-	routerProductKeluar := api.Group("/productkeluar")
+type handleProductKeluar struct {
+	client pb.ProductKeluarServiceClient
+}
+
+func NewHandleProductKeluar(client pb.ProductKeluarServiceClient, router *fiber.App) {
+	h := handleProductKeluar{
+		client: client,
+	}
+
+	routerProductKeluar := router.Group("/api/productkeluar")
 
 	routerProductKeluar.Use(middleware.Proctected())
 
+	routerProductKeluar.Get("/hello", h.handlerProductKeluarHello)
 	routerProductKeluar.Get("/", h.handlerProductKeluarResults)
 	routerProductKeluar.Get("/:id", h.handlerProductKeluarResult)
 	routerProductKeluar.Post("/create", h.handlerProductKeluarCreate)
 	routerProductKeluar.Post("/update/:id", h.handlerProductKeluarUpdate)
 	routerProductKeluar.Post("/delete/:id", h.handlerProductKeluarDelete)
+}
 
+// handlerProductKeluarHello function
+// @Summary Greet the ProductKeluar
+// @Description Return a greeting message for the ProductKeluar
+// @Tags ProductKeluar
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Router /productkeluar/hello [get]
+func (h *handleProductKeluar) handlerProductKeluarHello(c *fiber.Ctx) error {
+	return c.SendString("Handler ProductKeluar")
 }
 
 // handlerProductKeluarCreate function
-// @Summary createProductKeluar to the application
+// @Summary Create a new ProductKeluar
 // @Description Create ProductKeluar
 // @Tags ProductKeluar
 // @Accept json
 // @Produce json
-// @Param productkeluar body domain.ProductKeluarInput true "ProductKeluar information"
+// @Param productkeluar body domain.CreateProductKeluarRequest true "ProductKeluar information"
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productkeluar/create [post]
-func (h *Handler) handlerProductKeluarCreate(c *fiber.Ctx) error {
-	var body domain.ProductKeluarInput
+func (h *handleProductKeluar) handlerProductKeluarCreate(c *fiber.Ctx) error {
+	var body domain.CreateProductKeluarRequest
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -50,7 +70,13 @@ func (h *Handler) handlerProductKeluarCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.ProductKeluar.Create(&body)
+	data := &pb.CreateProductKeluarInput{
+		Qty:        body.Qty,
+		ProductId:  body.ProductID,
+		CategoryId: body.CategoryID,
+	}
+
+	res, err := h.client.CreateProductKeluar(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -68,16 +94,16 @@ func (h *Handler) handlerProductKeluarCreate(c *fiber.Ctx) error {
 }
 
 // handlerProductKeluarResults function
-// @Summary Get productkeluar results
-// @Description Retrieve the results for each productkeluar
+// @Summary Get ProductKeluar results
+// @Description Retrieve the results for all ProductKeluar
 // @Tags ProductKeluar
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productkeluar [get]
-func (h *Handler) handlerProductKeluarResults(c *fiber.Ctx) error {
-	res, err := h.services.ProductKeluar.Results()
+func (h *handleProductKeluar) handlerProductKeluarResults(c *fiber.Ctx) error {
+	res, err := h.client.GetProductKeluars(c.Context(), &pb.ProductKeluarsRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -95,8 +121,8 @@ func (h *Handler) handlerProductKeluarResults(c *fiber.Ctx) error {
 }
 
 // handlerProductKeluarResult function
-// @Summary Get productkeluar result
-// @Description Retrieve the result for a specific productkeluar
+// @Summary Get ProductKeluar result
+// @Description Retrieve the result for a specific ProductKeluar
 // @Tags ProductKeluar
 // @Param id path string true "ProductKeluar ID"
 // @Produce json
@@ -104,14 +130,15 @@ func (h *Handler) handlerProductKeluarResults(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productkeluar/{id} [get]
-func (h *Handler) handlerProductKeluarResult(c *fiber.Ctx) error {
-	var body domain.ProductKeluarInput
+func (h *handleProductKeluar) handlerProductKeluarResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	body.ID = id
+	data := &pb.ProductKeluarRequest{
+		Id: id,
+	}
 
-	res, err := h.services.ProductKeluar.Result(&body)
+	res, err := h.client.GetProductKeluar(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -129,8 +156,8 @@ func (h *Handler) handlerProductKeluarResult(c *fiber.Ctx) error {
 }
 
 // handlerProductKeluarDelete function
-// @Summary Delete productkeluar
-// @Description Delete a specific productkeluar
+// @Summary Delete a ProductKeluar
+// @Description Delete a specific ProductKeluar
 // @Tags ProductKeluar
 // @Param id path string true "ProductKeluar ID"
 // @Produce json
@@ -138,13 +165,15 @@ func (h *Handler) handlerProductKeluarResult(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productkeluar/{id} [delete]
-func (h *Handler) handlerProductKeluarDelete(c *fiber.Ctx) error {
-	var body domain.ProductKeluarInput
+func (h *handleProductKeluar) handlerProductKeluarDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.ProductKeluar.Delete(&body)
+	data := &pb.ProductKeluarRequest{
+		Id: id,
+	}
+
+	res, err := h.client.DeleteProductKeluar(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -162,18 +191,18 @@ func (h *Handler) handlerProductKeluarDelete(c *fiber.Ctx) error {
 }
 
 // handlerProductKeluarUpdate function
-// @Summary Update productkeluar
-// @Description Update a specific productkeluar
+// @Summary Update a ProductKeluar
+// @Description Update a specific ProductKeluar
 // @Tags ProductKeluar
 // @Param id path string true "ProductKeluar ID"
-// @Param body body domain.ProductKeluarInput true "ProductKeluar Data"
+// @Param body body domain.UpdateProductKeluarRequest true "ProductKeluar Data"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productkeluar/{id} [put]
-func (h *Handler) handlerProductKeluarUpdate(c *fiber.Ctx) error {
-	var body domain.ProductKeluarInput
+func (h *handleProductKeluar) handlerProductKeluarUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateProductKeluarRequest
 	id := c.Params("id")
 
 	body.ID = id
@@ -194,7 +223,14 @@ func (h *Handler) handlerProductKeluarUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.ProductKeluar.Update(&body)
+	data := &pb.UpdateProductKeluarInput{
+		Id:         body.ID,
+		Qty:        body.Qty,
+		ProductId:  body.ProductID,
+		CategoryId: body.CategoryID,
+	}
+
+	res, err := h.client.UpdateProductKeluar(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{

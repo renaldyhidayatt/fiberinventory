@@ -14,8 +14,8 @@ func NewServiceProductKeluar(productkeluar repository.ProductKeluarRepository) *
 	return &ServiceProductKeluar{Repository: productkeluar}
 }
 
-func (s *ServiceProductKeluar) Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
-	var productkeluar domain.ProductKeluarInput
+func (s *ServiceProductKeluar) Create(input *domain.CreateProductKeluarRequest) (*models.ModelProductKeluar, error) {
+	var productkeluar domain.CreateProductKeluarRequest
 
 	productkeluar.Qty = input.Qty
 	productkeluar.ProductID = input.ProductID
@@ -32,26 +32,22 @@ func (s *ServiceProductKeluar) Results() (*[]models.ModelProductKeluar, error) {
 	return res, err
 }
 
-func (s *ServiceProductKeluar) Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
-	var productkeluar domain.ProductKeluarInput
-	productkeluar.ID = input.ID
+func (s *ServiceProductKeluar) Result(id string) (*models.ModelProductKeluar, error) {
 
-	res, err := s.Repository.Result(&productkeluar)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 }
 
-func (s *ServiceProductKeluar) Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
-	var productkeluar domain.ProductKeluarInput
-	productkeluar.ID = input.ID
+func (s *ServiceProductKeluar) Delete(id string) (*models.ModelProductKeluar, error) {
 
-	res, err := s.Repository.Delete(&productkeluar)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceProductKeluar) Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
-	var productkeluar domain.ProductKeluarInput
+func (s *ServiceProductKeluar) Update(input *domain.UpdateProductKeluarRequest) (*models.ModelProductKeluar, error) {
+	var productkeluar domain.UpdateProductKeluarRequest
 
 	productkeluar.Qty = input.Qty
 	productkeluar.ProductID = input.ProductID

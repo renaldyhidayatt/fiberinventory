@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+import "category.proto";
+
+import "google/protobuf/timestamp.proto";
+
+message Product {
+    string id = 1;
+    string name = 2;
+    string image = 3;
+    string qty = 4;
+    Category category = 5;
+    string category_id = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+}
+
+message ProductsRequest {
+
+}
+
+message ProductResponse {
+    Product product = 1;
+}
+
+message ProductsResponse {
+    repeated Product products = 1;
+}
+
+message CreateProductInput {
+    string name = 1;
+    string image = 2;
+    string qty = 3;
+    string category_id = 4;
+}
+
+message UpdateProductInput {
+    string id = 1;
+    string name = 2;
+    string image = 3;
+    string qty = 4;
+    string category_id = 5;
+}
+
+message ProductRequest {
+    string id = 1;
+}
+
+message DeleteProductResponse {
+    bool success = 1;
+}
+
+service ProductService {
+    rpc CreateProduct(CreateProductInput) returns (ProductResponse) {}
+    rpc GetProducts(ProductsRequest) returns (ProductsResponse) {}
+    rpc GetProduct(ProductRequest) returns (ProductResponse) {}
+    rpc UpdateProduct(UpdateProductInput) returns (ProductResponse) {}
+    rpc DeleteProduct(ProductRequest) returns (DeleteProductResponse) {}
+}

@@ -26,7 +26,8 @@ func (h Hashing) HashPassword(password string) (string, error) {
 }
 
 func (h Hashing) ComparePassword(hashPassword string, password string) error {
-	hw := []byte(hashPassword)
 	pw := []byte(password)
-	return bcrypt.CompareHashAndPassword(hw, pw)
+	hw := []byte(hashPassword)
+	err := bcrypt.CompareHashAndPassword(hw, pw)
+	return err
 }

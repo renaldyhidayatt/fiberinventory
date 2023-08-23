@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCustomerRepository_Create(t *testing.T) {
@@ -20,7 +20,7 @@ func TestCustomerRepository_Create(t *testing.T) {
 
 	mockCustomerRepo := mocks.NewMockCustomerRepository(mockCtrl)
 
-	customerInput := &domain.CustomerInput{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
+	customerInput := &domain.CreateCustomerRequest{Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 	expectedModel := &models.ModelCustomer{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
 	mockCustomerRepo.EXPECT().Create(customerInput).Return(expectedModel, nil)
@@ -39,15 +39,13 @@ func TestCustomerRepository_Result(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	customerInput := &domain.CustomerInput{ID: myUuid}
-
 	expectedModel := &models.ModelCustomer{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
-	mockRepo.EXPECT().Result(customerInput).Return(expectedModel, nil)
+	mockRepo.EXPECT().Result(myUuid).Return(expectedModel, nil)
 
 	categoryService := &service.ServiceCustomer{Repository: mockRepo}
 
-	resultModel, err := categoryService.Result(customerInput)
+	resultModel, err := categoryService.Result(myUuid)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -83,14 +81,12 @@ func TestCustomerRepository_Delete(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	customerInput := &domain.CustomerInput{ID: myUuid}
-
 	expectedModel := &models.ModelCustomer{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
-	mockRepo.EXPECT().Delete(customerInput).Return(expectedModel, nil)
+	mockRepo.EXPECT().Delete(myUuid).Return(expectedModel, nil)
 
 	customerService := service.ServiceCustomer{Repository: mockRepo}
-	deletedModel, err := customerService.Delete(customerInput)
+	deletedModel, err := customerService.Delete(myUuid)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -104,7 +100,7 @@ func TestCustomerRepository_Update(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	customerInput := &domain.CustomerInput{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
+	customerInput := &domain.UpdateCustomerRequest{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
 	expectedModel := &models.ModelCustomer{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 

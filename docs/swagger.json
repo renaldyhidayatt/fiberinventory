@@ -1,9 +1,315 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "REST API for FiberInventory",
+        "title": "FiberInventory",
+        "contact": {},
+        "version": "1.0"
     },
+    "host": "localhost:5000",
+    "basePath": "/api/",
     "paths": {
+        "/api/customer": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve the results for each customer",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Get customer results",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/productmasuk/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve the result for a specific ProductMasuk",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductMasuk"
+                ],
+                "summary": "Get ProductMasuk result",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductMasuk ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a specific ProductMasuk",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductMasuk"
+                ],
+                "summary": "Update ProductMasuk",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductMasuk ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "ProductMasuk Data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdateProductMasukRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a specific ProductMasuk",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ProductMasuk"
+                ],
+                "summary": "Delete ProductMasuk",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ProductMasuk ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/supplier/hello": {
+            "get": {
+                "description": "Return a greeting message to the supplier",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Supplier"
+                ],
+                "summary": "Greet the Category",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/supplier/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve the result for a specific supplier",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Supplier"
+                ],
+                "summary": "Get supplier result",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Supplier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update a specific supplier",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Supplier"
+                ],
+                "summary": "Update supplier",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Supplier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Supplier Data",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdateSupplierRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a specific supplier",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Supplier"
+                ],
+                "summary": "Delete supplier",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Supplier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorMessage"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/hello": {
             "get": {
                 "description": "Return a greeting message to the user",
@@ -44,7 +350,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.UserInput"
+                            "$ref": "#/definitions/domain.LoginInput"
                         }
                     }
                 ],
@@ -84,7 +390,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.UserInput"
+                            "$ref": "#/definitions/domain.RegisterInput"
                         }
                     }
                 ],
@@ -160,7 +466,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.CategoryInput"
+                            "$ref": "#/definitions/domain.CreateCategoryRequest"
                         }
                     }
                 ],
@@ -267,7 +573,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.CategoryInput"
+                            "$ref": "#/definitions/domain.UpdateCategoryRequest"
                         }
                     }
                 ],
@@ -325,37 +631,6 @@
                 }
             }
         },
-        "/customer": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve the results for each customer",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Customer"
-                ],
-                "summary": "Get customer results",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorMessage"
-                        }
-                    }
-                }
-            }
-        },
         "/customer/create": {
             "post": {
                 "security": [
@@ -381,7 +656,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.CustomerInput"
+                            "$ref": "#/definitions/domain.CreateCustomerRequest"
                         }
                     }
                 ],
@@ -493,7 +768,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.CustomerInput"
+                            "$ref": "#/definitions/domain.UpdateCustomerRequest"
                         }
                     }
                 ],
@@ -607,7 +882,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductInput"
+                            "$ref": "#/definitions/domain.CreateProductRequest"
                         }
                     }
                 ],
@@ -719,7 +994,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductInput"
+                            "$ref": "#/definitions/domain.UpdateProductRequest"
                         }
                     }
                 ],
@@ -784,14 +1059,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve the results for each productkeluar",
+                "description": "Retrieve the results for all ProductKeluar",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductKeluar"
                 ],
-                "summary": "Get productkeluar results",
+                "summary": "Get ProductKeluar results",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -825,7 +1100,7 @@
                 "tags": [
                     "ProductKeluar"
                 ],
-                "summary": "createProductKeluar to the application",
+                "summary": "Create a new ProductKeluar",
                 "parameters": [
                     {
                         "description": "ProductKeluar information",
@@ -833,7 +1108,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductKeluarInput"
+                            "$ref": "#/definitions/domain.CreateProductKeluarRequest"
                         }
                     }
                 ],
@@ -853,6 +1128,26 @@
                 }
             }
         },
+        "/productkeluar/hello": {
+            "get": {
+                "description": "Return a greeting message for the ProductKeluar",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "ProductKeluar"
+                ],
+                "summary": "Greet the ProductKeluar",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/productkeluar/{id}": {
             "get": {
                 "security": [
@@ -860,14 +1155,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve the result for a specific productkeluar",
+                "description": "Retrieve the result for a specific ProductKeluar",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductKeluar"
                 ],
-                "summary": "Get productkeluar result",
+                "summary": "Get ProductKeluar result",
                 "parameters": [
                     {
                         "type": "string",
@@ -898,14 +1193,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update a specific productkeluar",
+                "description": "Update a specific ProductKeluar",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductKeluar"
                 ],
-                "summary": "Update productkeluar",
+                "summary": "Update a ProductKeluar",
                 "parameters": [
                     {
                         "type": "string",
@@ -920,7 +1215,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductKeluarInput"
+                            "$ref": "#/definitions/domain.UpdateProductKeluarRequest"
                         }
                     }
                 ],
@@ -945,14 +1240,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Delete a specific productkeluar",
+                "description": "Delete a specific ProductKeluar",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductKeluar"
                 ],
-                "summary": "Delete productkeluar",
+                "summary": "Delete a ProductKeluar",
                 "parameters": [
                     {
                         "type": "string",
@@ -985,14 +1280,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve the results for each productmasuk",
+                "description": "Retrieve the results for all ProductMasuk",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "ProductMasuk"
                 ],
-                "summary": "Get productmasuk results",
+                "summary": "Get ProductMasuk results",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1026,7 +1321,7 @@
                 "tags": [
                     "ProductMasuk"
                 ],
-                "summary": "createProductMasuk to the application",
+                "summary": "Create a new ProductMasuk",
                 "parameters": [
                     {
                         "description": "ProductMasuk information",
@@ -1034,7 +1329,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.ProductMasukInput"
+                            "$ref": "#/definitions/domain.CreateProductMasukRequest"
                         }
                     }
                 ],
@@ -1054,126 +1349,21 @@
                 }
             }
         },
-        "/productmasuk/{id}": {
+        "/productmasuk/hello": {
             "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve the result for a specific productmasuk",
+                "description": "Return a greeting message for the ProductMasuk",
                 "produces": [
-                    "application/json"
+                    "text/plain"
                 ],
                 "tags": [
                     "ProductMasuk"
                 ],
-                "summary": "Get productmasuk result",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductMasuk ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Greet the ProductMasuk",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/domain.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorMessage"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Update a specific productmasuk",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductMasuk"
-                ],
-                "summary": "Update productmasuk",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductMasuk ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "ProductMasuk Data",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/domain.ProductMasukInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorMessage"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete a specific productmasuk",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "ProductMasuk"
-                ],
-                "summary": "Delete productMasuk",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ProductMasuk ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorMessage"
+                            "type": "string"
                         }
                     }
                 }
@@ -1186,14 +1376,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve the results for each sale",
+                "description": "Retrieve the results for each Sale",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Sale"
                 ],
-                "summary": "Get sale results",
+                "summary": "Get Sale results",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1217,7 +1407,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create Sale",
+                "description": "Create a new Sale",
                 "consumes": [
                     "application/json"
                 ],
@@ -1227,7 +1417,7 @@
                 "tags": [
                     "Sale"
                 ],
-                "summary": "createSale to the application",
+                "summary": "Create a Sale",
                 "parameters": [
                     {
                         "description": "Sale information",
@@ -1235,7 +1425,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.SaleInput"
+                            "$ref": "#/definitions/domain.CreateSaleRequest"
                         }
                     }
                 ],
@@ -1255,6 +1445,26 @@
                 }
             }
         },
+        "/sale/hello": {
+            "get": {
+                "description": "Return a greeting message for the Sale",
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Sale"
+                ],
+                "summary": "Greet the Sale",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/sale/{id}": {
             "get": {
                 "security": [
@@ -1262,14 +1472,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve the result for a specific sale",
+                "description": "Retrieve the result for a specific Sale",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Sale"
                 ],
-                "summary": "Get sale result",
+                "summary": "Get Sale result",
                 "parameters": [
                     {
                         "type": "string",
@@ -1300,29 +1510,29 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update a specific supplier",
+                "description": "Update a specific Sale",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Supplier"
+                    "Sale"
                 ],
-                "summary": "Update supplier",
+                "summary": "Update Sale",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Supplier ID",
+                        "description": "Sale ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Category Data",
+                        "description": "Sale Data",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.SupplierInput"
+                            "$ref": "#/definitions/domain.UpdateSaleRequest"
                         }
                     }
                 ],
@@ -1347,14 +1557,14 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Delete a specific sale",
+                "description": "Delete a specific Sale",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Sale"
                 ],
-                "summary": "Delete sale",
+                "summary": "Delete Sale",
                 "parameters": [
                     {
                         "type": "string",
@@ -1436,86 +1646,8 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.SupplierInput"
+                            "$ref": "#/definitions/domain.CreateSupplierRequest"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorMessage"
-                        }
-                    }
-                }
-            }
-        },
-        "/supplier/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Retrieve the result for a specific supplier",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Supplier"
-                ],
-                "summary": "Get supplier result",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Supplier ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/domain.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/domain.ErrorMessage"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Delete a specific supplier",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Supplier"
-                ],
-                "summary": "Delete supplier",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Supplier ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1541,7 +1673,7 @@
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve the results for each USer",
+                "description": "Retrieve the results for each User",
                 "produces": [
                     "application/json"
                 ],
@@ -1646,7 +1778,7 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Users ID",
+                        "description": "User ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -1657,7 +1789,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.UserInput"
+                            "$ref": "#/definitions/domain.UpdateUserRequest"
                         }
                     }
                 ],
@@ -1717,27 +1849,22 @@
         }
     },
     "definitions": {
-        "domain.CategoryInput": {
+        "domain.CreateCategoryRequest": {
             "type": "object",
             "required": [
-                "id",
                 "name"
             ],
             "properties": {
-                "id": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 }
             }
         },
-        "domain.CustomerInput": {
+        "domain.CreateCustomerRequest": {
             "type": "object",
             "required": [
                 "alamat",
                 "email",
-                "id",
                 "name",
                 "phone"
             ],
@@ -1749,7 +1876,122 @@
                 "email": {
                     "type": "string"
                 },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string",
+                    "minLength": 12
+                }
+            }
+        },
+        "domain.CreateProductKeluarRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "product_id",
+                "qty"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
                 "id": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CreateProductMasukRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "product_id",
+                "qty",
+                "supplier_id"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "string"
+                },
+                "supplier_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CreateProductRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "image",
+                "name",
+                "qty"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CreateSaleRequest": {
+            "type": "object",
+            "required": [
+                "alamat",
+                "email",
+                "name",
+                "phone"
+            ],
+            "properties": {
+                "alamat": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string",
+                    "minLength": 12
+                }
+            }
+        },
+        "domain.CreateSupplierRequest": {
+            "type": "object",
+            "required": [
+                "alamat",
+                "email",
+                "name",
+                "phone"
+            ],
+            "properties": {
+                "alamat": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "email": {
                     "type": "string"
                 },
                 "name": {
@@ -1775,76 +2017,46 @@
                 }
             }
         },
-        "domain.ProductInput": {
+        "domain.LoginInput": {
             "type": "object",
             "required": [
-                "category_id",
-                "image",
-                "name",
-                "qty"
+                "email",
+                "password"
             ],
             "properties": {
-                "category_id": {
+                "email": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "qty": {
-                    "type": "string"
+                "password": {
+                    "type": "string",
+                    "minLength": 8
                 }
             }
         },
-        "domain.ProductKeluarInput": {
+        "domain.RegisterInput": {
             "type": "object",
             "required": [
-                "category_id",
-                "product_id",
-                "qty"
+                "email",
+                "first_name",
+                "last_name",
+                "password",
+                "role"
             ],
             "properties": {
-                "category_id": {
+                "email": {
                     "type": "string"
                 },
-                "id": {
+                "first_name": {
                     "type": "string"
                 },
-                "product_id": {
+                "last_name": {
                     "type": "string"
                 },
-                "qty": {
-                    "type": "string"
-                }
-            }
-        },
-        "domain.ProductMasukInput": {
-            "type": "object",
-            "required": [
-                "name",
-                "product_id",
-                "qty",
-                "supplier_id"
-            ],
-            "properties": {
-                "id": {
-                    "type": "string"
+                "password": {
+                    "type": "string",
+                    "minLength": 8
                 },
-                "name": {
-                    "type": "string"
-                },
-                "product_id": {
-                    "type": "string"
-                },
-                "qty": {
-                    "type": "string"
-                },
-                "supplier_id": {
+                "role": {
                     "type": "string"
                 }
             }
@@ -1873,7 +2085,22 @@
                 }
             }
         },
-        "domain.SaleInput": {
+        "domain.UpdateCategoryRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UpdateCustomerRequest": {
             "type": "object",
             "required": [
                 "alamat",
@@ -1902,7 +2129,81 @@
                 }
             }
         },
-        "domain.SupplierInput": {
+        "domain.UpdateProductKeluarRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "product_id",
+                "qty"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UpdateProductMasukRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "product_id",
+                "qty",
+                "supplier_id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "string"
+                },
+                "supplier_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UpdateProductRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "image",
+                "name",
+                "qty"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "qty": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UpdateSaleRequest": {
             "type": "object",
             "required": [
                 "alamat",
@@ -1931,7 +2232,36 @@
                 }
             }
         },
-        "domain.UserInput": {
+        "domain.UpdateSupplierRequest": {
+            "type": "object",
+            "required": [
+                "alamat",
+                "email",
+                "id",
+                "name",
+                "phone"
+            ],
+            "properties": {
+                "alamat": {
+                    "type": "string",
+                    "maxLength": 1000
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string",
+                    "minLength": 12
+                }
+            }
+        },
+        "domain.UpdateUserRequest": {
             "type": "object",
             "required": [
                 "email",
@@ -1961,6 +2291,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "Header"
         }
     }
 }

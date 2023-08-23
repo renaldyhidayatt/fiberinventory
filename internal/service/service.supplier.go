@@ -14,8 +14,8 @@ func NewServiceSupplier(supplier repository.SupplierRepository) *ServiceSupplier
 	return &ServiceSupplier{Repository: supplier}
 }
 
-func (s *ServiceSupplier) Create(input *domain.SupplierInput) (*models.ModelSupplier, error) {
-	var supplier domain.SupplierInput
+func (s *ServiceSupplier) Create(input *domain.CreateSupplierRequest) (*models.ModelSupplier, error) {
+	var supplier domain.CreateSupplierRequest
 	supplier.Name = input.Name
 	supplier.Telepon = input.Telepon
 	supplier.Email = input.Email
@@ -32,26 +32,23 @@ func (s *ServiceSupplier) Results() (*[]models.ModelSupplier, error) {
 	return res, err
 }
 
-func (s *ServiceSupplier) Result(input *domain.SupplierInput) (*models.ModelSupplier, error) {
-	var supplier domain.SupplierInput
-	supplier.ID = input.ID
+func (s *ServiceSupplier) Result(id string) (*models.ModelSupplier, error) {
 
-	res, err := s.Repository.Result(&supplier)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 }
 
-func (s *ServiceSupplier) Delete(input *domain.SupplierInput) (*models.ModelSupplier, error) {
-	var supplier domain.SupplierInput
-	supplier.ID = input.ID
+func (s *ServiceSupplier) Delete(id string) (*models.ModelSupplier, error) {
 
-	res, err := s.Repository.Delete(&supplier)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceSupplier) Update(input *domain.SupplierInput) (*models.ModelSupplier, error) {
-	var supplier domain.SupplierInput
+func (s *ServiceSupplier) Update(input *domain.UpdateSupplierRequest) (*models.ModelSupplier, error) {
+	var supplier domain.UpdateSupplierRequest
+
 	supplier.Name = input.Name
 	supplier.Telepon = input.Telepon
 	supplier.Email = input.Email

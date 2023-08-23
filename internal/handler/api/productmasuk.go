@@ -1,38 +1,58 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
 	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initProductMasukGroup(api *fiber.App) {
-	routerProductMasuk := api.Group("/productmasuk")
+type handleProductMasuk struct {
+	client pb.ProductMasukServiceClient
+}
+
+func NewHandleProductMasuk(client pb.ProductMasukServiceClient, router *fiber.App) {
+	handlerProductMasuk := handleProductMasuk{
+		client: client,
+	}
+
+	routerProductMasuk := router.Group("/api/productmasuk")
 
 	routerProductMasuk.Use(middleware.Proctected())
 
-	routerProductMasuk.Get("/", h.handlerProductMasukResults)
-	routerProductMasuk.Get("/:id", h.handlerProductMasukResult)
-	routerProductMasuk.Post("/create", h.handlerProductMasukCreate)
-	routerProductMasuk.Post("/update/:id", h.handlerProductMasukUpdate)
-	routerProductMasuk.Post("/delete/:id", h.handlerProductMasukDelete)
-
+	routerProductMasuk.Get("/hello", handlerProductMasuk.handlerProductMasukHello)
+	routerProductMasuk.Get("/", handlerProductMasuk.handlerProductMasukResults)
+	routerProductMasuk.Get("/:id", handlerProductMasuk.handlerProductMasukResult)
+	routerProductMasuk.Post("/create", handlerProductMasuk.handlerProductMasukCreate)
+	routerProductMasuk.Post("/update/:id", handlerProductMasuk.handlerProductMasukUpdate)
+	routerProductMasuk.Post("/delete/:id", handlerProductMasuk.handlerProductMasukDelete)
 }
 
-// ProductMasukInput function
-// @Summary createProductMasuk to the application
+// handlerProductMasukHello function
+// @Summary Greet the ProductMasuk
+// @Description Return a greeting message for the ProductMasuk
+// @Tags ProductMasuk
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Router /productmasuk/hello [get]
+func (h *handleProductMasuk) handlerProductMasukHello(c *fiber.Ctx) error {
+	return c.SendString("Handler ProductMasuk")
+}
+
+// handlerProductMasukCreate function
+// @Summary Create a new ProductMasuk
 // @Description Create ProductMasuk
 // @Tags ProductMasuk
 // @Accept json
 // @Produce json
-// @Param productmasuk body domain.ProductMasukInput true "ProductMasuk information"
+// @Param productmasuk body domain.CreateProductMasukRequest true "ProductMasuk information"
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productmasuk/create [post]
-func (h *Handler) handlerProductMasukCreate(c *fiber.Ctx) error {
-	var body domain.ProductMasukInput
+func (h *handleProductMasuk) handlerProductMasukCreate(c *fiber.Ctx) error {
+	var body domain.CreateProductMasukRequest
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -50,7 +70,14 @@ func (h *Handler) handlerProductMasukCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.ProductMasuk.Create(&body)
+	data := &pb.CreateProductMasukInput{
+		Name:       body.Name,
+		Qty:        body.Qty,
+		ProductId:  body.ProductID,
+		SupplierId: body.SupplierID,
+	}
+
+	res, err := h.client.CreateProductMasuk(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -68,16 +95,16 @@ func (h *Handler) handlerProductMasukCreate(c *fiber.Ctx) error {
 }
 
 // handlerProductMasukResults function
-// @Summary Get productmasuk results
-// @Description Retrieve the results for each productmasuk
+// @Summary Get ProductMasuk results
+// @Description Retrieve the results for all ProductMasuk
 // @Tags ProductMasuk
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /productmasuk [get]
-func (h *Handler) handlerProductMasukResults(c *fiber.Ctx) error {
-	res, err := h.services.ProductMasuk.Results()
+func (h *handleProductMasuk) handlerProductMasukResults(c *fiber.Ctx) error {
+	res, err := h.client.GetProductMasuks(c.Context(), &pb.ProductMasuksRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -95,23 +122,24 @@ func (h *Handler) handlerProductMasukResults(c *fiber.Ctx) error {
 }
 
 // handlerProductMasukResult function
-// @Summary Get productmasuk result
-// @Description Retrieve the result for a specific productmasuk
+// @Summary Get ProductMasuk result
+// @Description Retrieve the result for a specific ProductMasuk
 // @Tags ProductMasuk
 // @Param id path string true "ProductMasuk ID"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
-// @Router /productmasuk/{id} [get]
-func (h *Handler) handlerProductMasukResult(c *fiber.Ctx) error {
-	var body domain.ProductMasukInput
+// @Router /api/productmasuk/{id} [get]
+func (h *handleProductMasuk) handlerProductMasukResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	body.ID = id
+	data := &pb.ProductMasukRequest{
+		Id: id,
+	}
 
-	res, err := h.services.ProductMasuk.Result(&body)
+	res, err := h.client.GetProductMasuk(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -129,22 +157,23 @@ func (h *Handler) handlerProductMasukResult(c *fiber.Ctx) error {
 }
 
 // handlerProductMasukDelete function
-// @Summary Delete productMasuk
-// @Description Delete a specific productmasuk
+// @Summary Delete ProductMasuk
+// @Description Delete a specific ProductMasuk
 // @Tags ProductMasuk
 // @Param id path string true "ProductMasuk ID"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
-// @Router /productmasuk/{id} [delete]
-func (h *Handler) handlerProductMasukDelete(c *fiber.Ctx) error {
-	var body domain.ProductMasukInput
+// @Router /api/productmasuk/{id} [delete]
+func (h *handleProductMasuk) handlerProductMasukDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.ProductMasuk.Delete(&body)
+	data := &pb.ProductMasukRequest{
+		Id: id,
+	}
+	res, err := h.client.DeleteProductMasuk(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -162,18 +191,18 @@ func (h *Handler) handlerProductMasukDelete(c *fiber.Ctx) error {
 }
 
 // handlerProductMasukUpdate function
-// @Summary Update productmasuk
-// @Description Update a specific productmasuk
+// @Summary Update ProductMasuk
+// @Description Update a specific ProductMasuk
 // @Tags ProductMasuk
 // @Param id path string true "ProductMasuk ID"
-// @Param body body domain.ProductMasukInput true "ProductMasuk Data"
+// @Param body body domain.UpdateProductMasukRequest true "ProductMasuk Data"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
-// @Router /productmasuk/{id} [put]
-func (h *Handler) handlerProductMasukUpdate(c *fiber.Ctx) error {
-	var body domain.ProductMasukInput
+// @Router /api/productmasuk/{id} [put]
+func (h *handleProductMasuk) handlerProductMasukUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateProductMasukRequest
 	id := c.Params("id")
 
 	body.ID = id
@@ -193,7 +222,15 @@ func (h *Handler) handlerProductMasukUpdate(c *fiber.Ctx) error {
 			StatusCode: fiber.StatusBadRequest,
 		})
 	}
-	res, err := h.services.ProductMasuk.Update(&body)
+	data := &pb.UpdateProductMasukInput{
+		Id:         body.ID,
+		Name:       body.Name,
+		Qty:        body.Qty,
+		ProductId:  body.ProductID,
+		SupplierId: body.SupplierID,
+	}
+
+	res, err := h.client.UpdateProductMasuk(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{

@@ -6,7 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type UserInput struct {
+type UpdateUserRequest struct {
 	ID        string `json:"id" validate:"uuid"`
 	FirstName string `json:"first_name" validate:"required,lowercase"`
 	LastName  string `json:"last_name" validate:"required,lowercase"`
@@ -15,7 +15,7 @@ type UserInput struct {
 	Role      string `json:"role" validate:"required,lowercase"`
 }
 
-func (c *UserInput) Validate() error {
+func (c *UpdateUserRequest) Validate() error {
 	validate := validator.New()
 
 	err := validate.Struct(c)

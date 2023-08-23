@@ -1,16 +1,22 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
-	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initUserGroup(api *fiber.App) {
-	routerUser := api.Group("/users")
+type handlerUser struct {
+	client pb.UserServiceClient
+}
 
-	routerUser.Use(middleware.Proctected())
+func NewHandlerUser(client pb.UserServiceClient, router *fiber.App) {
+	h := handlerUser{
+		client: client,
+	}
+
+	routerUser := router.Group("/api/user")
 
 	routerUser.Get("/hello", h.handlerUserHello)
 	routerUser.Put("/update/:id", h.handlerUserUpdate)
@@ -27,21 +33,21 @@ func (h *Handler) initUserGroup(api *fiber.App) {
 // @Security BearerAuth
 // @Success 200 {string} string "OK"
 // @Router /users/hello [get]
-func (h *Handler) handlerUserHello(c *fiber.Ctx) error {
+func (h *handlerUser) handlerUserHello(c *fiber.Ctx) error {
 	return c.SendString("Handler user")
 }
 
 // handlerUserResults function
 // @Summary Get users results
-// @Description Retrieve the results for each USer
+// @Description Retrieve the results for each User
 // @Tags Users
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /users [get]
-func (h *Handler) handlerUserResults(c *fiber.Ctx) error {
-	res, err := h.services.User.Results()
+func (h *handlerUser) handlerUserResults(c *fiber.Ctx) error {
+	res, err := h.client.GetUsers(c.Context(), &pb.UsersRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -68,13 +74,15 @@ func (h *Handler) handlerUserResults(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /users/{id} [get]
-func (h *Handler) handlerUserResult(c *fiber.Ctx) error {
-	var body domain.UserInput
+func (h *handlerUser) handlerUserResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.User.Result(&body)
+	data := &pb.UserRequest{
+		Id: id,
+	}
+
+	res, err := h.client.GetUser(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -101,14 +109,15 @@ func (h *Handler) handlerUserResult(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /users/{id} [delete]
-func (h *Handler) handlerUserDelete(c *fiber.Ctx) error {
-	var body domain.UserInput
+func (h *handlerUser) handlerUserDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	body.ID = id
+	data := &pb.UserRequest{
+		Id: id,
+	}
 
-	res, err := h.services.User.Delete(&body)
+	res, err := h.client.DeleteUser(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -129,15 +138,15 @@ func (h *Handler) handlerUserDelete(c *fiber.Ctx) error {
 // @Summary Update User
 // @Description Update a specific user
 // @Tags Users
-// @Param id path string true "Users ID"
-// @Param body body domain.UserInput true "User Data"
+// @Param id path string true "User ID"
+// @Param body body domain.UpdateUserRequest true "User Data"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /users/{id} [put]
-func (h *Handler) handlerUserUpdate(c *fiber.Ctx) error {
-	var body domain.UserInput
+func (h *handlerUser) handlerUserUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateUserRequest
 
 	id := c.Params("id")
 
@@ -159,7 +168,15 @@ func (h *Handler) handlerUserUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.User.Update(&body)
+	data := &pb.UpdateUserInput{
+		Id:        id,
+		Firstname: body.FirstName,
+		Lastname:  body.LastName,
+		Email:     body.Email,
+		Role:      body.Role,
+	}
+
+	res, err := h.client.UpdateUser(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{

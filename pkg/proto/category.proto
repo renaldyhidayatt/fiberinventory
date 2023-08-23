@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+import "google/protobuf/timestamp.proto";
+
+
+message Category{
+    string id = 1;
+    string name = 2;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+message CategoriesRequest{
+
+}
+
+message CategoryResponse{
+    Category category = 1;
+}
+
+message CategoriesResponse {
+    repeated Category categories = 1;
+}
+
+message CreateCategoryInput{
+    string name = 1;
+}
+
+message UpdateCategoryInput{
+    string id = 1;
+    string name = 2;
+}
+
+message CategoryRequest{
+    string id = 1;
+}
+
+message DeleteCategoryResponse{ bool success = 1;}
+
+service CategoryService{
+    rpc CreateCategory(CreateCategoryInput)returns (CategoryResponse){}
+    rpc GetCategories(CategoriesRequest) returns (CategoriesResponse){}
+    rpc GetCategory(CategoryRequest) returns (CategoryResponse){}
+    rpc UpdateCategory(UpdateCategoryInput) returns (CategoryResponse){}
+    rpc DeleteCategory(CategoryRequest) returns (DeleteCategoryResponse){}
+
+}

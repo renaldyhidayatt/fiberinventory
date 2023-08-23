@@ -1,17 +1,27 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
 	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initSaleGroup(api *fiber.App) {
-	routerSale := api.Group("/sale")
+type handleSale struct {
+	client pb.SaleServiceClient
+}
+
+func NewHandlerSale(client pb.SaleServiceClient, router *fiber.App) {
+	h := handleSale{
+		client: client,
+	}
+
+	routerSale := router.Group("/api/sale")
 
 	routerSale.Use(middleware.Proctected())
 
+	routerSale.Get("/hello", h.handlerSaleHello)
 	routerSale.Get("/", h.handlerSaleResults)
 	routerSale.Get("/:id", h.handlerSaleResult)
 	routerSale.Post("/create", h.handlerSaleCreate)
@@ -20,19 +30,30 @@ func (h *Handler) initSaleGroup(api *fiber.App) {
 
 }
 
+// handlerSaleHello function
+// @Summary Greet the Sale
+// @Description Return a greeting message for the Sale
+// @Tags Sale
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Router /sale/hello [get]
+func (h *handleSale) handlerSaleHello(c *fiber.Ctx) error {
+	return c.SendString("Handler Sale")
+}
+
 // handlerSaleCreate function
-// @Summary createSale to the application
-// @Description Create Sale
+// @Summary Create a Sale
+// @Description Create a new Sale
 // @Tags Sale
 // @Accept json
 // @Produce json
-// @Param body body domain.SaleInput true "Sale information"
+// @Param body body domain.CreateSaleRequest true "Sale information"
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /sale/create [post]
-func (h *Handler) handlerSaleCreate(c *fiber.Ctx) error {
-	var body domain.SaleInput
+func (h *handleSale) handlerSaleCreate(c *fiber.Ctx) error {
+	var body domain.CreateSaleRequest
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -50,7 +71,14 @@ func (h *Handler) handlerSaleCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Sale.Create(&body)
+	data := &pb.CreateSaleInput{
+		Name:    body.Name,
+		Alamat:  body.Alamat,
+		Email:   body.Email,
+		Telepon: body.Telepon,
+	}
+
+	res, err := h.client.CreateSale(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -68,16 +96,16 @@ func (h *Handler) handlerSaleCreate(c *fiber.Ctx) error {
 }
 
 // handlerSaleResults function
-// @Summary Get sale results
-// @Description Retrieve the results for each sale
+// @Summary Get Sale results
+// @Description Retrieve the results for each Sale
 // @Tags Sale
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /sale [get]
-func (h *Handler) handlerSaleResults(c *fiber.Ctx) error {
-	res, err := h.services.Sale.Results()
+func (h *handleSale) handlerSaleResults(c *fiber.Ctx) error {
+	res, err := h.client.GetSales(c.Context(), &pb.SalesRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -95,8 +123,8 @@ func (h *Handler) handlerSaleResults(c *fiber.Ctx) error {
 }
 
 // handlerSaleResult function
-// @Summary Get sale result
-// @Description Retrieve the result for a specific sale
+// @Summary Get Sale result
+// @Description Retrieve the result for a specific Sale
 // @Tags Sale
 // @Param id path string true "Sale ID"
 // @Produce json
@@ -104,13 +132,15 @@ func (h *Handler) handlerSaleResults(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /sale/{id} [get]
-func (h *Handler) handlerSaleResult(c *fiber.Ctx) error {
-	var body domain.SaleInput
+func (h *handleSale) handlerSaleResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.Sale.Result(&body)
+	data := &pb.SaleRequest{
+		Id: id,
+	}
+
+	res, err := h.client.GetSale(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -128,8 +158,8 @@ func (h *Handler) handlerSaleResult(c *fiber.Ctx) error {
 }
 
 // handlerSaleDelete function
-// @Summary Delete sale
-// @Description Delete a specific sale
+// @Summary Delete Sale
+// @Description Delete a specific Sale
 // @Tags Sale
 // @Param id path string true "Sale ID"
 // @Produce json
@@ -137,13 +167,15 @@ func (h *Handler) handlerSaleResult(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /sale/{id} [delete]
-func (h *Handler) handlerSaleDelete(c *fiber.Ctx) error {
-	var body domain.SaleInput
+func (h *handleSale) handlerSaleDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.Sale.Delete(&body)
+	data := &pb.SaleRequest{
+		Id: id,
+	}
+
+	res, err := h.client.DeleteSale(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -161,18 +193,19 @@ func (h *Handler) handlerSaleDelete(c *fiber.Ctx) error {
 }
 
 // handlerSaleUpdate function
-// @Summary Update sale
-// @Description Update a specific sale
+// @Summary Update Sale
+// @Description Update a specific Sale
 // @Tags Sale
 // @Param id path string true "Sale ID"
-// @Param body body domain.SaleInput true "Sale Data"
+// @Param body body domain.UpdateSaleRequest true "Sale Data"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /sale/{id} [put]
-func (h *Handler) handlerSaleUpdate(c *fiber.Ctx) error {
-	var body domain.SaleInput
+func (h *handleSale) handlerSaleUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateSaleRequest
+
 	id := c.Params("id")
 
 	body.ID = id
@@ -193,7 +226,15 @@ func (h *Handler) handlerSaleUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Sale.Update(&body)
+	data := &pb.UpdateSaleInput{
+		Id:      body.ID,
+		Name:    body.Name,
+		Alamat:  body.Alamat,
+		Email:   body.Email,
+		Telepon: body.Telepon,
+	}
+
+	res, err := h.client.UpdateSale(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{

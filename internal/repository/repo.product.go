@@ -15,7 +15,7 @@ func NewRepositoryProduct(db *gorm.DB) *repositoryProduct {
 	return &repositoryProduct{db: db}
 }
 
-func (r *repositoryProduct) Create(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (r *repositoryProduct) Create(input *domain.CreateProductRequest) (*models.ModelProduct, error) {
 	var product models.ModelProduct
 
 	product.Name = input.Name
@@ -56,9 +56,9 @@ func (r *repositoryProduct) Results() (*[]models.ModelProduct, error) {
 	return &product, nil
 }
 
-func (r *repositoryProduct) Result(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (r *repositoryProduct) Result(id string) (*models.ModelProduct, error) {
 	var product models.ModelProduct
-	product.ID = input.ID
+	product.ID = id
 
 	db := r.db.Model(&product)
 
@@ -72,9 +72,9 @@ func (r *repositoryProduct) Result(input *domain.ProductInput) (*models.ModelPro
 	return &product, nil
 }
 
-func (r *repositoryProduct) Delete(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (r *repositoryProduct) Delete(id string) (*models.ModelProduct, error) {
 	var product models.ModelProduct
-	product.ID = input.ID
+	product.ID = id
 
 	db := r.db.Model(&product)
 
@@ -94,7 +94,7 @@ func (r *repositoryProduct) Delete(input *domain.ProductInput) (*models.ModelPro
 	return &product, nil
 }
 
-func (r *repositoryProduct) Update(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (r *repositoryProduct) Update(input *domain.UpdateProductRequest) (*models.ModelProduct, error) {
 	var product models.ModelProduct
 
 	product.ID = input.ID

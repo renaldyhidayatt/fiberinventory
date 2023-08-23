@@ -1,23 +1,44 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
 	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initSupplierGroup(api *fiber.App) {
-	routerSupplier := api.Group("/supplier")
+type handleSupplier struct {
+	client pb.SupplierServiceClient
+}
+
+func NewHandleSupplier(client pb.SupplierServiceClient, router *fiber.App) {
+	h := handleSupplier{
+		client: client,
+	}
+
+	routerSupplier := router.Group("/api/supplier")
 
 	routerSupplier.Use(middleware.Proctected())
+
+	routerSupplier.Get("/hello", h.handlerSupplierHello)
 
 	routerSupplier.Get("/", h.handlerSupplierResults)
 	routerSupplier.Get("/:id", h.handlerSupplierResult)
 	routerSupplier.Post("/create", h.handlerSupplierCreate)
 	routerSupplier.Post("/update/:id", h.handlerSupplierUpdate)
 	routerSupplier.Post("/delete/:id", h.handlerSupplierDelete)
+}
 
+// handlerSupplierHello function
+// @Summary Greet the Category
+// @Description Return a greeting message to the supplier
+// @Tags Supplier
+// @Produce plain
+// @Success 200 {string} string "OK"
+// @Router /api/supplier/hello [get]
+func (h *handleSupplier) handlerSupplierHello(c *fiber.Ctx) error {
+	return c.SendString("Handler Supplier")
 }
 
 // handlerSupplierCreate function
@@ -26,13 +47,13 @@ func (h *Handler) initSupplierGroup(api *fiber.App) {
 // @Tags Supplier
 // @Accept json
 // @Produce json
-// @Param body body domain.SupplierInput true "Supplier information"
+// @Param body body domain.CreateSupplierRequest true "Supplier information"
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /supplier/create [post]
-func (h *Handler) handlerSupplierCreate(c *fiber.Ctx) error {
-	var body domain.SupplierInput
+func (h *handleSupplier) handlerSupplierCreate(c *fiber.Ctx) error {
+	var body domain.CreateSupplierRequest
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -50,7 +71,14 @@ func (h *Handler) handlerSupplierCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Supplier.Create(&body)
+	data := &pb.CreateSupplierInput{
+		Name:    body.Name,
+		Alamat:  body.Alamat,
+		Email:   body.Email,
+		Telepon: body.Telepon,
+	}
+
+	res, err := h.client.CreateSupplier(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -76,8 +104,8 @@ func (h *Handler) handlerSupplierCreate(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /supplier [get]
-func (h *Handler) handlerSupplierResults(c *fiber.Ctx) error {
-	res, err := h.services.Supplier.Results()
+func (h *handleSupplier) handlerSupplierResults(c *fiber.Ctx) error {
+	res, err := h.client.GetSuppliers(c.Context(), &pb.SuppliersRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -103,14 +131,16 @@ func (h *Handler) handlerSupplierResults(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
-// @Router /supplier/{id} [get]
-func (h *Handler) handlerSupplierResult(c *fiber.Ctx) error {
-	var body domain.SupplierInput
+// @Router /api/supplier/{id} [get]
+func (h *handleSupplier) handlerSupplierResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.Supplier.Result(&body)
+	data := &pb.SupplierRequest{
+		Id: id,
+	}
+
+	res, err := h.client.GetSupplier(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -136,14 +166,16 @@ func (h *Handler) handlerSupplierResult(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
-// @Router /supplier/{id} [delete]
-func (h *Handler) handlerSupplierDelete(c *fiber.Ctx) error {
-	var body domain.SupplierInput
+// @Router /api/supplier/{id} [delete]
+func (h *handleSupplier) handlerSupplierDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	body.ID = id
 
-	res, err := h.services.Supplier.Delete(&body)
+	data := &pb.SupplierRequest{
+		Id: id,
+	}
+
+	res, err := h.client.DeleteSupplier(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -165,14 +197,14 @@ func (h *Handler) handlerSupplierDelete(c *fiber.Ctx) error {
 // @Description Update a specific supplier
 // @Tags Supplier
 // @Param id path string true "Supplier ID"
-// @Param body body domain.SupplierInput true "Category Data"
+// @Param body body domain.UpdateSupplierRequest true "Supplier Data"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
-// @Router /sale/{id} [put]
-func (h *Handler) handlerSupplierUpdate(c *fiber.Ctx) error {
-	var body domain.SupplierInput
+// @Router /api/supplier/{id} [put]
+func (h *handleSupplier) handlerSupplierUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateSupplierRequest
 
 	id := c.Params("id")
 
@@ -194,7 +226,15 @@ func (h *Handler) handlerSupplierUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Supplier.Update(&body)
+	data := &pb.UpdateSupplierInput{
+		Id:      body.ID,
+		Name:    body.Name,
+		Alamat:  body.Alamat,
+		Email:   body.Email,
+		Telepon: body.Telepon,
+	}
+
+	res, err := h.client.UpdateSupplier(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{

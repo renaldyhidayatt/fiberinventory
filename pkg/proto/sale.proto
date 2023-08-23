@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+
+import "google/protobuf/timestamp.proto";
+
+message Sale {
+    string id = 1;
+    string name = 2;
+    string alamat = 3;
+    string email = 4;
+    string telepon = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+message SalesRequest {}
+
+message SaleResponse {
+    Sale sale = 1;
+}
+
+message SalesResponse {
+    repeated Sale sales = 1;
+}
+
+message CreateSaleInput {
+    string name = 1;
+    string alamat = 2;
+    string email = 3;
+    string telepon = 4;
+}
+
+message UpdateSaleInput {
+    string id = 1;
+    string name = 2;
+    string alamat = 3;
+    string email = 4;
+    string telepon = 5;
+}
+
+message SaleRequest {
+    string id = 1;
+}
+
+message DeleteSaleResponse {
+    bool success = 1;
+}
+
+service SaleService {
+    rpc CreateSale(CreateSaleInput) returns (SaleResponse) {}
+    rpc GetSales(SalesRequest) returns (SalesResponse) {}
+    rpc GetSale(SaleRequest) returns (SaleResponse) {}
+    rpc UpdateSale(UpdateSaleInput) returns (SaleResponse) {}
+    rpc DeleteSale(SaleRequest) returns (DeleteSaleResponse) {}
+}

@@ -15,7 +15,7 @@ func NewRepositoryProductMasuk(db *gorm.DB) *repositoryProductMasuk {
 	return &repositoryProductMasuk{db: db}
 }
 
-func (r *repositoryProductMasuk) Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (r *repositoryProductMasuk) Create(input *domain.CreateProductMasukRequest) (*models.ModelProductMasuk, error) {
 	var productmasuk models.ModelProductMasuk
 
 	productmasuk.Name = input.Name
@@ -50,9 +50,9 @@ func (r *repositoryProductMasuk) Results() (*[]models.ModelProductMasuk, error) 
 
 }
 
-func (r *repositoryProductMasuk) Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (r *repositoryProductMasuk) Result(id string) (*models.ModelProductMasuk, error) {
 	var productmasuk models.ModelProductMasuk
-	productmasuk.ID = input.ID
+	productmasuk.ID = id
 
 	db := r.db.Model(&productmasuk)
 
@@ -66,9 +66,9 @@ func (r *repositoryProductMasuk) Result(input *domain.ProductMasukInput) (*model
 	return &productmasuk, nil
 }
 
-func (r *repositoryProductMasuk) Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (r *repositoryProductMasuk) Delete(id string) (*models.ModelProductMasuk, error) {
 	var productmasuk models.ModelProductMasuk
-	productmasuk.ID = input.ID
+	productmasuk.ID = id
 
 	db := r.db.Model(&productmasuk)
 
@@ -88,7 +88,7 @@ func (r *repositoryProductMasuk) Delete(input *domain.ProductMasukInput) (*model
 	return &productmasuk, nil
 }
 
-func (r *repositoryProductMasuk) Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (r *repositoryProductMasuk) Update(input *domain.UpdateProductMasukRequest) (*models.ModelProductMasuk, error) {
 	var productmasuk models.ModelProductMasuk
 
 	productmasuk.ID = input.ID

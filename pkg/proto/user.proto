@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+import "google/protobuf/timestamp.proto";
+
+message User {
+    string id = 1;
+    string firstname = 2;
+    string lastname = 3;
+    string email = 4;
+    string role = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
+
+message UsersRequest {
+
+}
+
+message UserResponse {
+    User user = 1;
+}
+
+message UsersResponse {
+    repeated User users = 1;
+}
+
+message CreateUserInput {
+    string firstname = 1;
+    string lastname = 2;
+    string email = 3;
+    string password = 4;
+    string role = 5;
+}
+
+message UpdateUserInput {
+    string id = 1;
+    string firstname = 2;
+    string lastname = 3;
+    string email = 4;
+    string role = 5;
+}
+
+message UserRequest {
+    string id = 1;
+}
+
+message DeleteUserResponse {
+    bool success = 1;
+}
+
+service UserService {
+    rpc CreateUser(CreateUserInput) returns (UserResponse) {}
+    rpc GetUsers(UsersRequest) returns (UsersResponse) {}
+    rpc GetUser(UserRequest) returns (UserResponse) {}
+    rpc UpdateUser(UpdateUserInput) returns (UserResponse) {}
+    rpc DeleteUser(UserRequest) returns (DeleteUserResponse) {}
+}

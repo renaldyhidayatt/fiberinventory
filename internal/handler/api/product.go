@@ -1,23 +1,33 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
 	"fiberinventory/internal/middleware"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initProductGroup(api *fiber.App) {
-	routerProduct := api.Group("/product")
+type handleProduct struct {
+	client pb.ProductServiceClient
+}
+
+func NewHandleProduct(client pb.ProductServiceClient, router *fiber.App) {
+
+	handlerProduct := handleProduct{
+		client: client,
+	}
+
+	routerProduct := router.Group("/api/product")
 
 	routerProduct.Use(middleware.Proctected())
 
-	routerProduct.Get("/hello", h.handlerProductHello)
-	routerProduct.Get("/", h.handlerProductResults)
-	routerProduct.Get("/:id", h.handlerProductResult)
-	routerProduct.Post("/create", h.handlerProductCreate)
-	routerProduct.Post("/update/:id", h.handlerProductUpdate)
-	routerProduct.Post("/delete/:id", h.handlerProductDelete)
+	routerProduct.Get("/hello", handlerProduct.handlerProductHello)
+	routerProduct.Get("/", handlerProduct.handlerProductResults)
+	routerProduct.Get("/:id", handlerProduct.handlerProductResult)
+	routerProduct.Post("/create", handlerProduct.handlerProductCreate)
+	routerProduct.Post("/update/:id", handlerProduct.handlerProductUpdate)
+	routerProduct.Post("/delete/:id", handlerProduct.handlerProductDelete)
 
 }
 
@@ -29,7 +39,7 @@ func (h *Handler) initProductGroup(api *fiber.App) {
 // @Security BearerAuth
 // @Success 200 {string} string "OK"
 // @Router /product/hello [get]
-func (h *Handler) handlerProductHello(c *fiber.Ctx) error {
+func (h *handleProduct) handlerProductHello(c *fiber.Ctx) error {
 	return c.SendString("Handler Product")
 }
 
@@ -39,13 +49,13 @@ func (h *Handler) handlerProductHello(c *fiber.Ctx) error {
 // @Tags product
 // @Accept json
 // @Produce json
-// @Param product body domain.ProductInput true "Product information"
+// @Param product body domain.CreateProductRequest true "Product information"
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /product/create [post]
-func (h *Handler) handlerProductCreate(c *fiber.Ctx) error {
-	var body domain.ProductInput
+func (h *handleProduct) handlerProductCreate(c *fiber.Ctx) error {
+	var body domain.CreateProductRequest
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -63,7 +73,14 @@ func (h *Handler) handlerProductCreate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Product.Create(&body)
+	data := &pb.CreateProductInput{
+		Name:       body.Name,
+		Image:      body.Image,
+		Qty:        body.Qty,
+		CategoryId: body.CategoryID,
+	}
+
+	res, err := h.client.CreateProduct(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -89,8 +106,8 @@ func (h *Handler) handlerProductCreate(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /product [get]
-func (h *Handler) handlerProductResults(c *fiber.Ctx) error {
-	res, err := h.services.Product.Results()
+func (h *handleProduct) handlerProductResults(c *fiber.Ctx) error {
+	res, err := h.client.GetProducts(c.Context(), &pb.ProductsRequest{})
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -117,14 +134,15 @@ func (h *Handler) handlerProductResults(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /product/{id} [get]
-func (h *Handler) handlerProductResult(c *fiber.Ctx) error {
-	var body domain.ProductInput
+func (h *handleProduct) handlerProductResult(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	body.ID = id
+	data := &pb.ProductRequest{
+		Id: id,
+	}
 
-	res, err := h.services.Product.Result(&body)
+	res, err := h.client.GetProduct(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -151,14 +169,15 @@ func (h *Handler) handlerProductResult(c *fiber.Ctx) error {
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /product/{id} [delete]
-func (h *Handler) handlerProductDelete(c *fiber.Ctx) error {
-	var body domain.ProductInput
+func (h *handleProduct) handlerProductDelete(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
-	body.ID = id
+	data := &pb.ProductRequest{
+		Id: id,
+	}
 
-	res, err := h.services.Product.Delete(&body)
+	res, err := h.client.DeleteProduct(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -180,14 +199,14 @@ func (h *Handler) handlerProductDelete(c *fiber.Ctx) error {
 // @Description Update a specific product
 // @Tags Product
 // @Param id path string true "Product ID"
-// @Param body body domain.ProductInput true "Product Data"
+// @Param body body domain.UpdateProductRequest true "Product Data"
 // @Produce json
 // @Security BearerAuth
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /product/{id} [put]
-func (h *Handler) handlerProductUpdate(c *fiber.Ctx) error {
-	var body domain.ProductInput
+func (h *handleProduct) handlerProductUpdate(c *fiber.Ctx) error {
+	var body domain.UpdateProductRequest
 
 	id := c.Params("id")
 
@@ -208,7 +227,15 @@ func (h *Handler) handlerProductUpdate(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.Product.Update(&body)
+	data := &pb.UpdateProductInput{
+		Id:         body.ID,
+		Name:       body.Name,
+		Image:      body.Image,
+		Qty:        body.Qty,
+		CategoryId: body.CategoryID,
+	}
+
+	res, err := h.client.UpdateProduct(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -219,7 +246,7 @@ func (h *Handler) handlerProductUpdate(c *fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(domain.Response{
-		Message:    "berhasil mengupdate category",
+		Message:    "berhasil mengupdate product",
 		Data:       res,
 		StatusCode: fiber.StatusOK,
 	})

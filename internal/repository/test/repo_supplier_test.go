@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestSupplierRepository_Create(t *testing.T) {
@@ -20,7 +20,7 @@ func TestSupplierRepository_Create(t *testing.T) {
 
 	mockRepo := mocks.NewMockSupplierRepository(mockCtrl)
 
-	SupplierInput := &domain.SupplierInput{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
+	SupplierInput := &domain.CreateSupplierRequest{Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 	expectedModel := &models.ModelSupplier{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
 	mockRepo.EXPECT().Create(SupplierInput).Return(expectedModel, nil)
@@ -39,15 +39,13 @@ func TestSupplierRepository_Result(t *testing.T) {
 
 	mockRepo := mocks.NewMockSupplierRepository(mockCtrl)
 
-	SupplierInput := &domain.SupplierInput{ID: myUuid}
-
 	expectedModel := &models.ModelSupplier{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
-	mockRepo.EXPECT().Result(SupplierInput).Return(expectedModel, nil)
+	mockRepo.EXPECT().Result(myUuid).Return(expectedModel, nil)
 
 	supplierService := &service.ServiceSupplier{Repository: mockRepo}
 
-	resultModel, err := supplierService.Result(SupplierInput)
+	resultModel, err := supplierService.Result(myUuid)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -84,14 +82,12 @@ func TestSupplierRepository_Delete(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	SupplierInput := &domain.SupplierInput{ID: myUuid}
-
 	expectedModel := &models.ModelSupplier{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
-	mockRepo.EXPECT().Delete(SupplierInput).Return(expectedModel, nil)
+	mockRepo.EXPECT().Delete(myUuid).Return(expectedModel, nil)
 
 	supplierService := service.ServiceSupplier{Repository: mockRepo}
-	deletedModel, err := supplierService.Delete(SupplierInput)
+	deletedModel, err := supplierService.Delete(myUuid)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -105,7 +101,7 @@ func TestSupplierRepository_Update(t *testing.T) {
 
 	myUuid := uuid.NewString()
 
-	SupplierInput := &domain.SupplierInput{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
+	SupplierInput := &domain.UpdateSupplierRequest{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 
 	expectedModel := &models.ModelSupplier{ID: myUuid, Name: "ikan", Alamat: "ujung kulon", Email: "dota2@gmail.com", Telepon: "0888822122"}
 

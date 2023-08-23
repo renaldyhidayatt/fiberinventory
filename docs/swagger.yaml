@@ -1,22 +1,18 @@
+basePath: /api/
 definitions:
-  domain.CategoryInput:
+  domain.CreateCategoryRequest:
     properties:
-      id:
-        type: string
       name:
         type: string
     required:
-    - id
     - name
     type: object
-  domain.CustomerInput:
+  domain.CreateCustomerRequest:
     properties:
       alamat:
         maxLength: 1000
         type: string
       email:
-        type: string
-      id:
         type: string
       name:
         type: string
@@ -26,38 +22,10 @@ definitions:
     required:
     - alamat
     - email
-    - id
     - name
     - phone
     type: object
-  domain.ErrorMessage:
-    properties:
-      error:
-        type: boolean
-      message:
-        type: string
-      statusCode:
-        type: integer
-    type: object
-  domain.ProductInput:
-    properties:
-      category_id:
-        type: string
-      id:
-        type: string
-      image:
-        type: string
-      name:
-        type: string
-      qty:
-        type: string
-    required:
-    - category_id
-    - image
-    - name
-    - qty
-    type: object
-  domain.ProductKeluarInput:
+  domain.CreateProductKeluarRequest:
     properties:
       category_id:
         type: string
@@ -72,10 +40,8 @@ definitions:
     - product_id
     - qty
     type: object
-  domain.ProductMasukInput:
+  domain.CreateProductMasukRequest:
     properties:
-      id:
-        type: string
       name:
         type: string
       product_id:
@@ -89,6 +55,98 @@ definitions:
     - product_id
     - qty
     - supplier_id
+    type: object
+  domain.CreateProductRequest:
+    properties:
+      category_id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      qty:
+        type: string
+    required:
+    - category_id
+    - image
+    - name
+    - qty
+    type: object
+  domain.CreateSaleRequest:
+    properties:
+      alamat:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        minLength: 12
+        type: string
+    required:
+    - alamat
+    - email
+    - name
+    - phone
+    type: object
+  domain.CreateSupplierRequest:
+    properties:
+      alamat:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        minLength: 12
+        type: string
+    required:
+    - alamat
+    - email
+    - name
+    - phone
+    type: object
+  domain.ErrorMessage:
+    properties:
+      error:
+        type: boolean
+      message:
+        type: string
+      statusCode:
+        type: integer
+    type: object
+  domain.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  domain.RegisterInput:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      role:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - role
     type: object
   domain.Response:
     properties:
@@ -106,7 +164,17 @@ definitions:
       statusCode:
         type: integer
     type: object
-  domain.SaleInput:
+  domain.UpdateCategoryRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    required:
+    - id
+    - name
+    type: object
+  domain.UpdateCustomerRequest:
     properties:
       alamat:
         maxLength: 1000
@@ -127,7 +195,58 @@ definitions:
     - name
     - phone
     type: object
-  domain.SupplierInput:
+  domain.UpdateProductKeluarRequest:
+    properties:
+      category_id:
+        type: string
+      id:
+        type: string
+      product_id:
+        type: string
+      qty:
+        type: string
+    required:
+    - category_id
+    - product_id
+    - qty
+    type: object
+  domain.UpdateProductMasukRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      product_id:
+        type: string
+      qty:
+        type: string
+      supplier_id:
+        type: string
+    required:
+    - name
+    - product_id
+    - qty
+    - supplier_id
+    type: object
+  domain.UpdateProductRequest:
+    properties:
+      category_id:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      name:
+        type: string
+      qty:
+        type: string
+    required:
+    - category_id
+    - image
+    - name
+    - qty
+    type: object
+  domain.UpdateSaleRequest:
     properties:
       alamat:
         maxLength: 1000
@@ -148,7 +267,28 @@ definitions:
     - name
     - phone
     type: object
-  domain.UserInput:
+  domain.UpdateSupplierRequest:
+    properties:
+      alamat:
+        maxLength: 1000
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      phone:
+        minLength: 12
+        type: string
+    required:
+    - alamat
+    - email
+    - id
+    - name
+    - phone
+    type: object
+  domain.UpdateUserRequest:
     properties:
       email:
         type: string
@@ -170,9 +310,203 @@ definitions:
     - password
     - role
     type: object
+host: localhost:5000
 info:
   contact: {}
+  description: REST API for FiberInventory
+  title: FiberInventory
+  version: "1.0"
 paths:
+  /api/customer:
+    get:
+      description: Retrieve the results for each customer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get customer results
+      tags:
+      - Customer
+  /api/productmasuk/{id}:
+    delete:
+      description: Delete a specific ProductMasuk
+      parameters:
+      - description: ProductMasuk ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete ProductMasuk
+      tags:
+      - ProductMasuk
+    get:
+      description: Retrieve the result for a specific ProductMasuk
+      parameters:
+      - description: ProductMasuk ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get ProductMasuk result
+      tags:
+      - ProductMasuk
+    put:
+      description: Update a specific ProductMasuk
+      parameters:
+      - description: ProductMasuk ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: ProductMasuk Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateProductMasukRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update ProductMasuk
+      tags:
+      - ProductMasuk
+  /api/supplier/{id}:
+    delete:
+      description: Delete a specific supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Delete supplier
+      tags:
+      - Supplier
+    get:
+      description: Retrieve the result for a specific supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Get supplier result
+      tags:
+      - Supplier
+    put:
+      description: Update a specific supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Supplier Data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateSupplierRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorMessage'
+      security:
+      - BearerAuth: []
+      summary: Update supplier
+      tags:
+      - Supplier
+  /api/supplier/hello:
+    get:
+      description: Return a greeting message to the supplier
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greet the Category
+      tags:
+      - Supplier
   /auth/hello:
     get:
       description: Return a greeting message to the user
@@ -197,7 +531,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/domain.UserInput'
+          $ref: '#/definitions/domain.LoginInput'
       produces:
       - application/json
       responses:
@@ -223,7 +557,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/domain.UserInput'
+          $ref: '#/definitions/domain.RegisterInput'
       produces:
       - application/json
       responses:
@@ -319,7 +653,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.CategoryInput'
+          $ref: '#/definitions/domain.UpdateCategoryRequest'
       produces:
       - application/json
       responses:
@@ -347,7 +681,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.CategoryInput'
+          $ref: '#/definitions/domain.CreateCategoryRequest'
       produces:
       - application/json
       responses:
@@ -377,25 +711,6 @@ paths:
       summary: Greet the Category
       tags:
       - Category
-  /customer:
-    get:
-      description: Retrieve the results for each customer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorMessage'
-      security:
-      - BearerAuth: []
-      summary: Get customer results
-      tags:
-      - Customer
   /customer/{id}:
     delete:
       description: Delete a specific customer
@@ -458,7 +773,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.CustomerInput'
+          $ref: '#/definitions/domain.UpdateCustomerRequest'
       produces:
       - application/json
       responses:
@@ -486,7 +801,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.CustomerInput'
+          $ref: '#/definitions/domain.CreateCustomerRequest'
       produces:
       - application/json
       responses:
@@ -599,7 +914,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.ProductInput'
+          $ref: '#/definitions/domain.UpdateProductRequest'
       produces:
       - application/json
       responses:
@@ -627,7 +942,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/domain.ProductInput'
+          $ref: '#/definitions/domain.CreateProductRequest'
       produces:
       - application/json
       responses:
@@ -661,7 +976,7 @@ paths:
       - Product
   /productkeluar:
     get:
-      description: Retrieve the results for each productkeluar
+      description: Retrieve the results for all ProductKeluar
       produces:
       - application/json
       responses:
@@ -675,12 +990,12 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Get productkeluar results
+      summary: Get ProductKeluar results
       tags:
       - ProductKeluar
   /productkeluar/{id}:
     delete:
-      description: Delete a specific productkeluar
+      description: Delete a specific ProductKeluar
       parameters:
       - description: ProductKeluar ID
         in: path
@@ -700,11 +1015,11 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Delete productkeluar
+      summary: Delete a ProductKeluar
       tags:
       - ProductKeluar
     get:
-      description: Retrieve the result for a specific productkeluar
+      description: Retrieve the result for a specific ProductKeluar
       parameters:
       - description: ProductKeluar ID
         in: path
@@ -724,11 +1039,11 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Get productkeluar result
+      summary: Get ProductKeluar result
       tags:
       - ProductKeluar
     put:
-      description: Update a specific productkeluar
+      description: Update a specific ProductKeluar
       parameters:
       - description: ProductKeluar ID
         in: path
@@ -740,7 +1055,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.ProductKeluarInput'
+          $ref: '#/definitions/domain.UpdateProductKeluarRequest'
       produces:
       - application/json
       responses:
@@ -754,7 +1069,7 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Update productkeluar
+      summary: Update a ProductKeluar
       tags:
       - ProductKeluar
   /productkeluar/create:
@@ -768,7 +1083,7 @@ paths:
         name: productkeluar
         required: true
         schema:
-          $ref: '#/definitions/domain.ProductKeluarInput'
+          $ref: '#/definitions/domain.CreateProductKeluarRequest'
       produces:
       - application/json
       responses:
@@ -782,12 +1097,25 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: createProductKeluar to the application
+      summary: Create a new ProductKeluar
+      tags:
+      - ProductKeluar
+  /productkeluar/hello:
+    get:
+      description: Return a greeting message for the ProductKeluar
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greet the ProductKeluar
       tags:
       - ProductKeluar
   /productmasuk:
     get:
-      description: Retrieve the results for each productmasuk
+      description: Retrieve the results for all ProductMasuk
       produces:
       - application/json
       responses:
@@ -801,86 +1129,7 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Get productmasuk results
-      tags:
-      - ProductMasuk
-  /productmasuk/{id}:
-    delete:
-      description: Delete a specific productmasuk
-      parameters:
-      - description: ProductMasuk ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorMessage'
-      security:
-      - BearerAuth: []
-      summary: Delete productMasuk
-      tags:
-      - ProductMasuk
-    get:
-      description: Retrieve the result for a specific productmasuk
-      parameters:
-      - description: ProductMasuk ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorMessage'
-      security:
-      - BearerAuth: []
-      summary: Get productmasuk result
-      tags:
-      - ProductMasuk
-    put:
-      description: Update a specific productmasuk
-      parameters:
-      - description: ProductMasuk ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: ProductMasuk Data
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/domain.ProductMasukInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorMessage'
-      security:
-      - BearerAuth: []
-      summary: Update productmasuk
+      summary: Get ProductMasuk results
       tags:
       - ProductMasuk
   /productmasuk/create:
@@ -894,7 +1143,7 @@ paths:
         name: productmasuk
         required: true
         schema:
-          $ref: '#/definitions/domain.ProductMasukInput'
+          $ref: '#/definitions/domain.CreateProductMasukRequest'
       produces:
       - application/json
       responses:
@@ -908,12 +1157,25 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: createProductMasuk to the application
+      summary: Create a new ProductMasuk
+      tags:
+      - ProductMasuk
+  /productmasuk/hello:
+    get:
+      description: Return a greeting message for the ProductMasuk
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greet the ProductMasuk
       tags:
       - ProductMasuk
   /sale:
     get:
-      description: Retrieve the results for each sale
+      description: Retrieve the results for each Sale
       produces:
       - application/json
       responses:
@@ -927,12 +1189,12 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Get sale results
+      summary: Get Sale results
       tags:
       - Sale
   /sale/{id}:
     delete:
-      description: Delete a specific sale
+      description: Delete a specific Sale
       parameters:
       - description: Sale ID
         in: path
@@ -952,11 +1214,11 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Delete sale
+      summary: Delete Sale
       tags:
       - Sale
     get:
-      description: Retrieve the result for a specific sale
+      description: Retrieve the result for a specific Sale
       parameters:
       - description: Sale ID
         in: path
@@ -976,23 +1238,23 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Get sale result
+      summary: Get Sale result
       tags:
       - Sale
     put:
-      description: Update a specific supplier
+      description: Update a specific Sale
       parameters:
-      - description: Supplier ID
+      - description: Sale ID
         in: path
         name: id
         required: true
         type: string
-      - description: Category Data
+      - description: Sale Data
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.SupplierInput'
+          $ref: '#/definitions/domain.UpdateSaleRequest'
       produces:
       - application/json
       responses:
@@ -1006,21 +1268,21 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: Update supplier
+      summary: Update Sale
       tags:
-      - Supplier
+      - Sale
   /sale/create:
     post:
       consumes:
       - application/json
-      description: Create Sale
+      description: Create a new Sale
       parameters:
       - description: Sale information
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.SaleInput'
+          $ref: '#/definitions/domain.CreateSaleRequest'
       produces:
       - application/json
       responses:
@@ -1034,7 +1296,20 @@ paths:
             $ref: '#/definitions/domain.ErrorMessage'
       security:
       - BearerAuth: []
-      summary: createSale to the application
+      summary: Create a Sale
+      tags:
+      - Sale
+  /sale/hello:
+    get:
+      description: Return a greeting message for the Sale
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greet the Sale
       tags:
       - Sale
   /supplier:
@@ -1056,55 +1331,6 @@ paths:
       summary: Get supplier results
       tags:
       - Supplier
-  /supplier/{id}:
-    delete:
-      description: Delete a specific supplier
-      parameters:
-      - description: Supplier ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorMessage'
-      security:
-      - BearerAuth: []
-      summary: Delete supplier
-      tags:
-      - Supplier
-    get:
-      description: Retrieve the result for a specific supplier
-      parameters:
-      - description: Supplier ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/domain.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/domain.ErrorMessage'
-      security:
-      - BearerAuth: []
-      summary: Get supplier result
-      tags:
-      - Supplier
   /supplier/create:
     post:
       consumes:
@@ -1116,7 +1342,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.SupplierInput'
+          $ref: '#/definitions/domain.CreateSupplierRequest'
       produces:
       - application/json
       responses:
@@ -1135,7 +1361,7 @@ paths:
       - Supplier
   /users:
     get:
-      description: Retrieve the results for each USer
+      description: Retrieve the results for each User
       produces:
       - application/json
       responses:
@@ -1204,7 +1430,7 @@ paths:
     put:
       description: Update a specific user
       parameters:
-      - description: Users ID
+      - description: User ID
         in: path
         name: id
         required: true
@@ -1214,7 +1440,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/domain.UserInput'
+          $ref: '#/definitions/domain.UpdateUserRequest'
       produces:
       - application/json
       responses:
@@ -1246,4 +1472,9 @@ paths:
       summary: Greet the Users
       tags:
       - Users
+securityDefinitions:
+  BearerAuth:
+    in: Header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

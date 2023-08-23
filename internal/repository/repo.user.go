@@ -15,7 +15,7 @@ func NewRepositoryUser(db *gorm.DB) *repositoryUser {
 	return &repositoryUser{db: db}
 }
 
-func (r *repositoryUser) Register(input *domain.UserInput) (*models.ModelUser, error) {
+func (r *repositoryUser) Register(input *domain.RegisterInput) (*models.ModelUser, error) {
 	var user models.ModelUser
 	user.FirstName = input.FirstName
 	user.LastName = input.LastName
@@ -32,27 +32,25 @@ func (r *repositoryUser) Register(input *domain.UserInput) (*models.ModelUser, e
 	}
 
 	addNewUser := db.Debug().Create(&user).Commit()
-	if addNewUser.RowsAffected < 1 {
-		return &user, domain.ErrorRegisterFailed
+	if addNewUser.RowsAffected > 1 {
+		return nil, domain.ErrorRegisterFailed
 	}
 
 	return &user, nil
 }
 
-func (r *repositoryUser) Login(input *domain.UserInput) (*models.ModelUser, error) {
+func (r *repositoryUser) Login(input *domain.LoginInput) (*models.ModelUser, error) {
 	var user models.ModelUser
 	user.Email = input.Email
 	user.Password = input.Password
 
 	db := r.db.Model(&user)
 
-	checkEmailAndPassword := db.Debug().Where("email = ?", input.Email).Where("password = ?", input.Password)
+	checkEmailExist := db.Debug().First(&user, "email=?", input.Email)
 
-	if checkEmailAndPassword.RowsAffected < 1 {
-
-		return &user, domain.ErrorLoginFailed
+	if checkEmailExist.RowsAffected > 1 {
+		return &user, nil
 	}
-
 	return &user, nil
 }
 
@@ -71,10 +69,10 @@ func (r *repositoryUser) Results() (*[]models.ModelUser, error) {
 	return &user, nil
 }
 
-func (r *repositoryUser) Result(input *domain.UserInput) (*models.ModelUser, error) {
+func (r *repositoryUser) Result(id string) (*models.ModelUser, error) {
 	var user models.ModelUser
 
-	user.ID = input.ID
+	user.ID = id
 
 	db := r.db.Model(&user)
 
@@ -87,10 +85,10 @@ func (r *repositoryUser) Result(input *domain.UserInput) (*models.ModelUser, err
 	return &user, nil
 }
 
-func (r *repositoryUser) Delete(input *domain.UserInput) (*models.ModelUser, error) {
+func (r *repositoryUser) Delete(id string) (*models.ModelUser, error) {
 	var user models.ModelUser
 
-	user.ID = input.ID
+	user.ID = id
 
 	db := r.db.Model(&user)
 
@@ -108,16 +106,16 @@ func (r *repositoryUser) FindByEmail(email string) (*models.ModelUser, error) {
 
 	db := r.db.Model(&user)
 
-	checkEmail := db.Debug().Where("email = ?", email)
+	checkEmailExist := db.Debug().First(&user, "email=?", email)
 
-	if checkEmail.RowsAffected < 1 {
-		return nil, domain.ErrorUserNotFound
+	if checkEmailExist.RowsAffected > 1 {
+		return nil, checkEmailExist.Error
 	}
 
 	return &user, nil
 }
 
-func (r *repositoryUser) Update(input *domain.UserInput) (*models.ModelUser, error) {
+func (r *repositoryUser) Update(input *domain.UpdateUserRequest) (*models.ModelUser, error) {
 	var user models.ModelUser
 
 	user.ID = input.ID

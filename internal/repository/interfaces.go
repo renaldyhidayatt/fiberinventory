@@ -8,67 +8,67 @@ import (
 //go:generate mockgen -source=interfaces.go -destination=mocks/mock.go
 
 type UserRepository interface {
-	Register(input *domain.UserInput) (*models.ModelUser, error)
-	Login(input *domain.UserInput) (*models.ModelUser, error)
+	Register(input *domain.RegisterInput) (*models.ModelUser, error)
+	Login(input *domain.LoginInput) (*models.ModelUser, error)
 	Results() (*[]models.ModelUser, error)
-	Result(input *domain.UserInput) (*models.ModelUser, error)
-	Delete(input *domain.UserInput) (*models.ModelUser, error)
-	Update(input *domain.UserInput) (*models.ModelUser, error)
+	Result(id string) (*models.ModelUser, error)
+	Delete(id string) (*models.ModelUser, error)
+	Update(input *domain.UpdateUserRequest) (*models.ModelUser, error)
 	FindByEmail(email string) (*models.ModelUser, error)
 }
 
 type CategoryRepository interface {
-	Create(input *domain.CategoryInput) (*models.ModelCategory, error)
+	Create(input *domain.CreateCategoryRequest) (*models.ModelCategory, error)
 	Results() (*[]models.ModelCategory, error)
-	Result(input *domain.CategoryInput) (*models.ModelCategory, error)
-	Delete(input *domain.CategoryInput) (*models.ModelCategory, error)
-	Update(input *domain.CategoryInput) (*models.ModelCategory, error)
+	Result(id string) (*models.ModelCategory, error)
+	Delete(id string) (*models.ModelCategory, error)
+	Update(input *domain.UpdateCategoryRequest) (*models.ModelCategory, error)
 }
 
 type CustomerRepository interface {
-	Create(input *domain.CustomerInput) (*models.ModelCustomer, error)
+	Create(input *domain.CreateCustomerRequest) (*models.ModelCustomer, error)
 	Results() (*[]models.ModelCustomer, error)
-	Result(input *domain.CustomerInput) (*models.ModelCustomer, error)
-	Delete(input *domain.CustomerInput) (*models.ModelCustomer, error)
-	Update(input *domain.CustomerInput) (*models.ModelCustomer, error)
+	Result(id string) (*models.ModelCustomer, error)
+	Delete(od string) (*models.ModelCustomer, error)
+	Update(input *domain.UpdateCustomerRequest) (*models.ModelCustomer, error)
 }
 
 type ProductRepository interface {
-	Create(input *domain.ProductInput) (*models.ModelProduct, error)
-	Delete(input *domain.ProductInput) (*models.ModelProduct, error)
-	Result(input *domain.ProductInput) (*models.ModelProduct, error)
-	Update(input *domain.ProductInput) (*models.ModelProduct, error)
+	Create(input *domain.CreateProductRequest) (*models.ModelProduct, error)
+	Delete(id string) (*models.ModelProduct, error)
+	Result(id string) (*models.ModelProduct, error)
+	Update(input *domain.UpdateProductRequest) (*models.ModelProduct, error)
 	Results() (*[]models.ModelProduct, error)
 }
 
 type ProductKeluarRepository interface {
-	Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error)
-	Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error)
+	Create(input *domain.CreateProductKeluarRequest) (*models.ModelProductKeluar, error)
+	Result(id string) (*models.ModelProductKeluar, error)
 	Results() (*[]models.ModelProductKeluar, error)
-	Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error)
-	Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error)
+	Delete(id string) (*models.ModelProductKeluar, error)
+	Update(input *domain.UpdateProductKeluarRequest) (*models.ModelProductKeluar, error)
 }
 
 type ProductMasukRepository interface {
-	Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error)
-	Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error)
+	Create(input *domain.CreateProductMasukRequest) (*models.ModelProductMasuk, error)
+	Result(id string) (*models.ModelProductMasuk, error)
 	Results() (*[]models.ModelProductMasuk, error)
-	Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error)
-	Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error)
+	Delete(id string) (*models.ModelProductMasuk, error)
+	Update(input *domain.UpdateProductMasukRequest) (*models.ModelProductMasuk, error)
 }
 
 type SaleRepository interface {
-	Create(input *domain.SaleInput) (*models.ModelSale, error)
-	Result(input *domain.SaleInput) (*models.ModelSale, error)
+	Create(input *domain.CreateSaleRequest) (*models.ModelSale, error)
+	Result(id string) (*models.ModelSale, error)
 	Results() (*[]models.ModelSale, error)
-	Delete(input *domain.SaleInput) (*models.ModelSale, error)
-	Update(input *domain.SaleInput) (*models.ModelSale, error)
+	Delete(id string) (*models.ModelSale, error)
+	Update(input *domain.UpdateSaleRequest) (*models.ModelSale, error)
 }
 
 type SupplierRepository interface {
-	Create(input *domain.SupplierInput) (*models.ModelSupplier, error)
-	Result(input *domain.SupplierInput) (*models.ModelSupplier, error)
+	Create(input *domain.CreateSupplierRequest) (*models.ModelSupplier, error)
+	Result(id string) (*models.ModelSupplier, error)
 	Results() (*[]models.ModelSupplier, error)
-	Delete(input *domain.SupplierInput) (*models.ModelSupplier, error)
-	Update(input *domain.SupplierInput) (*models.ModelSupplier, error)
+	Delete(id string) (*models.ModelSupplier, error)
+	Update(input *domain.UpdateSupplierRequest) (*models.ModelSupplier, error)
 }

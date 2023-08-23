@@ -14,8 +14,9 @@ func NewServiceCategory(category repository.CategoryRepository) *ServiceCategory
 	return &ServiceCategory{Repository: category}
 }
 
-func (s *ServiceCategory) Create(input *domain.CategoryInput) (*models.ModelCategory, error) {
-	var category domain.CategoryInput
+func (s *ServiceCategory) Create(input *domain.CreateCategoryRequest) (*models.ModelCategory, error) {
+	var category domain.CreateCategoryRequest
+
 	category.Name = input.Name
 
 	res, err := s.Repository.Create(&category)
@@ -28,26 +29,24 @@ func (s *ServiceCategory) Results() (*[]models.ModelCategory, error) {
 	return res, err
 }
 
-func (s *ServiceCategory) Result(input *domain.CategoryInput) (*models.ModelCategory, error) {
-	var category domain.CategoryInput
-	category.ID = input.ID
+func (s *ServiceCategory) Result(id string) (*models.ModelCategory, error) {
 
-	res, err := s.Repository.Result(&category)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 }
 
-func (s *ServiceCategory) Delete(input *domain.CategoryInput) (*models.ModelCategory, error) {
-	var category domain.CategoryInput
-	category.ID = input.ID
+func (s *ServiceCategory) Delete(id string) (*models.ModelCategory, error) {
 
-	res, err := s.Repository.Delete(&category)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceCategory) Update(input *domain.CategoryInput) (*models.ModelCategory, error) {
-	var category domain.CategoryInput
+func (s *ServiceCategory) Update(input *domain.UpdateCategoryRequest) (*models.ModelCategory, error) {
+	var category domain.UpdateCategoryRequest
+
+	category.ID = input.ID
 	category.Name = input.Name
 
 	res, err := s.Repository.Update(&category)

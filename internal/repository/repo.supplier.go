@@ -15,7 +15,7 @@ func NewRepositorySupplier(db *gorm.DB) *repositorySupplier {
 	return &repositorySupplier{db: db}
 }
 
-func (r *repositorySupplier) Create(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (r *repositorySupplier) Create(input *domain.CreateSupplierRequest) (*models.ModelSupplier, error) {
 	var supplier models.ModelSupplier
 
 	supplier.Name = input.Name
@@ -55,9 +55,9 @@ func (r *repositorySupplier) Results() (*[]models.ModelSupplier, error) {
 	return &supplier, nil
 }
 
-func (r *repositorySupplier) Result(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (r *repositorySupplier) Result(id string) (*models.ModelSupplier, error) {
 	var supplier models.ModelSupplier
-	supplier.ID = input.ID
+	supplier.ID = id
 
 	db := r.db.Model(&supplier)
 
@@ -71,9 +71,9 @@ func (r *repositorySupplier) Result(input *domain.SupplierInput) (*models.ModelS
 	return &supplier, nil
 }
 
-func (r *repositorySupplier) Delete(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (r *repositorySupplier) Delete(id string) (*models.ModelSupplier, error) {
 	var supplier models.ModelSupplier
-	supplier.ID = input.ID
+	supplier.ID = id
 
 	db := r.db.Model(&supplier)
 
@@ -93,7 +93,7 @@ func (r *repositorySupplier) Delete(input *domain.SupplierInput) (*models.ModelS
 	return &supplier, nil
 }
 
-func (r *repositorySupplier) Update(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (r *repositorySupplier) Update(input *domain.UpdateSupplierRequest) (*models.ModelSupplier, error) {
 	var supplier models.ModelSupplier
 
 	supplier.ID = input.ID

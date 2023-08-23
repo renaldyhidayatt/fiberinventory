@@ -7,9 +7,9 @@ import (
 	"fiberinventory/internal/service"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCategoryRepository_Create(t *testing.T) {
@@ -19,7 +19,7 @@ func TestCategoryRepository_Create(t *testing.T) {
 	myUuid := uuid.NewString()
 
 	mockCategoryRepo := mocks.NewMockCategoryRepository(mockCtrl)
-	categoryInput := &domain.CategoryInput{Name: "TestCategory", ID: myUuid}
+	categoryInput := &domain.CreateCategoryRequest{Name: "TestCategory"}
 
 	expectedModel := &models.ModelCategory{Name: "TestCategory", ID: myUuid}
 
@@ -37,18 +37,18 @@ func TestCategoryRepository_Result(t *testing.T) {
 
 	mockRepo := mocks.NewMockCategoryRepository(mockCtrl)
 
-	input := &domain.CategoryInput{ID: "category_id"}
+	id := "assss"
 
 	expectedModel := &models.ModelCategory{
-		ID:   "category_id",
+		ID:   id,
 		Name: "TestCategory",
 	}
 
-	mockRepo.EXPECT().Result(input).Return(expectedModel, nil)
+	mockRepo.EXPECT().Result(id).Return(expectedModel, nil)
 
 	categoryService := &service.ServiceCategory{Repository: mockRepo}
 
-	resultModel, err := categoryService.Result(input)
+	resultModel, err := categoryService.Result(id)
 
 	assert.Equal(t, expectedModel, resultModel)
 
@@ -84,13 +84,13 @@ func TestCategoryRepository_Delete(t *testing.T) {
 	mockCategoryRepo := mocks.NewMockCategoryRepository(mockCtrl)
 
 	categoryID := uuid.NewString()
-	input := &domain.CategoryInput{ID: categoryID}
+
 	expectedModel := &models.ModelCategory{ID: categoryID, Name: "TestCategory"}
 
-	mockCategoryRepo.EXPECT().Delete(input).Return(expectedModel, nil)
+	mockCategoryRepo.EXPECT().Delete(categoryID).Return(expectedModel, nil)
 
 	categoryService := service.ServiceCategory{Repository: mockCategoryRepo}
-	deletedModel, err := categoryService.Delete(input)
+	deletedModel, err := categoryService.Delete(categoryID)
 
 	assert.Nil(t, err)
 	assert.Equal(t, expectedModel, deletedModel)
@@ -104,7 +104,7 @@ func TestCategoryRepository_Update(t *testing.T) {
 
 	categoryId := uuid.NewString()
 
-	categoryInput := &domain.CategoryInput{Name: "TestCategory", ID: categoryId}
+	categoryInput := &domain.UpdateCategoryRequest{Name: "TestCategory", ID: categoryId}
 	expectedModel := &models.ModelCategory{ID: categoryId, Name: "TestCategory"}
 
 	mockCategoryRepo.EXPECT().Update(categoryInput).Return(expectedModel, nil)

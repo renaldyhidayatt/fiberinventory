@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+import "product.proto";
+import "supplier.proto";
+
+import "google/protobuf/timestamp.proto";
+
+message ProductMasuk {
+    string id = 1;
+    string name = 2;
+    string qty = 3;
+    Product product = 4;
+    string product_id = 5;
+    Supplier supplier = 6;
+    string supplier_id = 7;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
+}
+
+message ProductMasuksRequest {}
+
+message ProductMasukResponse {
+    ProductMasuk product_masuk = 1;
+}
+
+message ProductMasuksResponse {
+    repeated ProductMasuk product_masuks = 1;
+}
+
+message CreateProductMasukInput {
+    string name = 1;
+    string qty = 2;
+    string product_id = 3;
+    string supplier_id = 4;
+}
+
+message UpdateProductMasukInput {
+    string id = 1;
+    string name = 2;
+    string qty = 3;
+    string product_id = 4;
+    string supplier_id = 5;
+}
+
+message ProductMasukRequest {
+    string id = 1;
+}
+
+message DeleteProductMasukResponse {
+    bool success = 1;
+}
+
+service ProductMasukService {
+    rpc CreateProductMasuk(CreateProductMasukInput) returns (ProductMasukResponse) {}
+    rpc GetProductMasuks(ProductMasuksRequest) returns (ProductMasuksResponse) {}
+    rpc GetProductMasuk(ProductMasukRequest) returns (ProductMasukResponse) {}
+    rpc UpdateProductMasuk(UpdateProductMasukInput) returns (ProductMasukResponse) {}
+    rpc DeleteProductMasuk(ProductMasukRequest) returns (DeleteProductMasukResponse) {}
+}

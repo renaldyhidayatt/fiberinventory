@@ -1,17 +1,26 @@
-package v1
+package api
 
 import (
 	"fiberinventory/internal/domain"
+	"fiberinventory/internal/pb"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h *Handler) initAuthGroup(api *fiber.App) {
-	users := api.Group("/auth")
+type handleAuth struct {
+	client pb.AuthServiceClient
+}
 
-	users.Get("/hello", h.handlerHello)
-	users.Post("/register", h.register)
-	users.Post("/login", h.login)
+func NewHandlerAuth(client pb.AuthServiceClient, router *fiber.App) {
+	handlerAuth := handleAuth{
+		client: client,
+	}
+
+	routerAuth := router.Group("/api/auth")
+
+	routerAuth.Get("/hello", handlerAuth.handlerHello)
+	routerAuth.Post("/register", handlerAuth.register)
+	routerAuth.Post("/login", handlerAuth.login)
 }
 
 // handlerHello function
@@ -21,7 +30,7 @@ func (h *Handler) initAuthGroup(api *fiber.App) {
 // @Produce plain
 // @Success 200 {string} string "OK"
 // @Router /auth/hello [get]
-func (h *Handler) handlerHello(c *fiber.Ctx) error {
+func (h *handleAuth) handlerHello(c *fiber.Ctx) error {
 	return c.SendString("Handler Auth")
 }
 
@@ -31,12 +40,12 @@ func (h *Handler) handlerHello(c *fiber.Ctx) error {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param user body domain.UserInput true "User information"
+// @Param user body domain.RegisterInput true "User information"
 // @Success 200 {object} domain.Response
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /auth/register [post]
-func (h *Handler) register(c *fiber.Ctx) error {
-	var body domain.UserInput
+func (h *handleAuth) register(c *fiber.Ctx) error {
+	var body domain.RegisterInput
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -54,7 +63,15 @@ func (h *Handler) register(c *fiber.Ctx) error {
 		})
 	}
 
-	_, err := h.services.User.Register(&body)
+	data := &pb.SignUpUserInput{
+		Firstname: body.FirstName,
+		Lastname:  body.LastName,
+		Email:     body.Email,
+		Password:  body.Password,
+		Role:      body.Role,
+	}
+
+	res, err := h.client.RegisterUser(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -66,7 +83,7 @@ func (h *Handler) register(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(domain.Response{
 		Message:    "berhasil register",
-		Data:       nil,
+		Data:       res,
 		StatusCode: fiber.StatusOK,
 	})
 }
@@ -77,12 +94,12 @@ func (h *Handler) register(c *fiber.Ctx) error {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param user body domain.UserInput true "User information"
+// @Param user body domain.LoginInput true "User information"
 // @Success 200 {object} domain.ResponseAuth
 // @Failure 400 {object} domain.ErrorMessage
 // @Router /auth/login [post]
-func (h *Handler) login(c *fiber.Ctx) error {
-	var body domain.UserInput
+func (h *handleAuth) login(c *fiber.Ctx) error {
+	var body domain.LoginInput
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{
@@ -100,7 +117,12 @@ func (h *Handler) login(c *fiber.Ctx) error {
 		})
 	}
 
-	res, err := h.services.User.Login(&body)
+	data := &pb.SignInUserInput{
+		Email:    body.Email,
+		Password: body.Password,
+	}
+
+	res, err := h.client.LoginUser(c.Context(), data)
 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(domain.ErrorMessage{

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = 'fiberinventory/internal/pb';
+
+import "category.proto";
+import "product.proto";
+
+import "google/protobuf/timestamp.proto";
+
+message ProductKeluar {
+    string id = 1;
+    string qty = 2;
+    Product product = 3;
+    string product_id = 4;
+    Category category = 5;
+    string category_id = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+}
+
+message ProductKeluarsRequest {}
+
+message ProductKeluarResponse {
+    ProductKeluar product_keluar = 1;
+}
+
+message ProductKeluarsResponse {
+    repeated ProductKeluar product_keluars = 1;
+}
+
+message CreateProductKeluarInput {
+    string qty = 1;
+    string product_id = 2;
+    string category_id = 3;
+}
+
+message UpdateProductKeluarInput {
+    string id = 1;
+    string qty = 2;
+    string product_id = 3;
+    string category_id = 4;
+}
+
+message ProductKeluarRequest {
+    string id = 1;
+}
+
+message DeleteProductKeluarResponse {
+    bool success = 1;
+}
+
+service ProductKeluarService {
+    rpc CreateProductKeluar(CreateProductKeluarInput) returns (ProductKeluarResponse) {}
+    rpc GetProductKeluars(ProductKeluarsRequest) returns (ProductKeluarsResponse) {}
+    rpc GetProductKeluar(ProductKeluarRequest) returns (ProductKeluarResponse) {}
+    rpc UpdateProductKeluar(UpdateProductKeluarInput) returns (ProductKeluarResponse) {}
+    rpc DeleteProductKeluar(ProductKeluarRequest) returns (DeleteProductKeluarResponse) {}
+}

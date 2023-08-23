@@ -60,12 +60,12 @@ var (
 	ErrorSupplierNotFound     = errors.New("failed result supplier")
 	ErrorSuppliersNotFound    = errors.New("failed results supplier")
 
-	ErrorUserAlready      = errors.New("name supplier already")
-	ErrorUserCreateFailed = errors.New("failed create supplier ")
-	ErrorUserUpdateFailed = errors.New("failed update supplier ")
-	ErrorUserDeleteFailed = errors.New("failed delete supplier ")
-	ErrorUserNotFound     = errors.New("failed result supplier")
-	ErrorUsersNotFound    = errors.New("failed results supplier")
+	ErrorUserAlready      = errors.New("name user already")
+	ErrorUserCreateFailed = errors.New("failed create user ")
+	ErrorUserUpdateFailed = errors.New("failed update user ")
+	ErrorUserDeleteFailed = errors.New("failed delete user ")
+	ErrorUserNotFound     = errors.New("failed result user")
+	ErrorUsersNotFound    = errors.New("failed results user")
 )
 
 type ErrorMessage struct {

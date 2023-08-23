@@ -19,12 +19,20 @@ func NewServiceUser(auth repository.UserRepository, hash hash.Hashing, token aut
 	return &ServiceUser{Repository: auth, Hash: hash, Token: token}
 }
 
-func (s *ServiceUser) Register(input *domain.UserInput) (*models.ModelUser, error) {
-	var schema domain.UserInput
+func (s *ServiceUser) Register(input *domain.RegisterInput) (*models.ModelUser, error) {
+
+	var schema domain.RegisterInput
+
+	passwordHash, err := s.Hash.HashPassword(input.Password)
+
+	if err != nil {
+		return nil, err
+	}
+
 	schema.FirstName = input.FirstName
 	schema.LastName = input.LastName
 	schema.Email = input.Email
-	schema.Password = input.Password
+	schema.Password = passwordHash
 	schema.Role = input.Role
 
 	res, err := s.Repository.Register(&schema)
@@ -32,8 +40,8 @@ func (s *ServiceUser) Register(input *domain.UserInput) (*models.ModelUser, erro
 	return res, err
 }
 
-func (s *ServiceUser) Login(input *domain.UserInput) (domain.Token, error) {
-	var schema domain.UserInput
+func (s *ServiceUser) Login(input *domain.LoginInput) (domain.Token, error) {
+	var schema domain.LoginInput
 
 	res, err := s.Repository.FindByEmail(input.Email)
 
@@ -42,6 +50,10 @@ func (s *ServiceUser) Login(input *domain.UserInput) (domain.Token, error) {
 	}
 
 	err = s.Hash.ComparePassword(res.Password, input.Password)
+
+	fmt.Println("result email: ", res.Password)
+	fmt.Println("result email: ", input.Email)
+	fmt.Println("Input password", input.Password)
 
 	if err != nil {
 		return domain.Token{}, fmt.Errorf("failed error :%w", err)
@@ -80,28 +92,22 @@ func (s *ServiceUser) Results() (*[]models.ModelUser, error) {
 	return res, err
 }
 
-func (s *ServiceUser) Result(input *domain.UserInput) (*models.ModelUser, error) {
-	var user domain.UserInput
+func (s *ServiceUser) Result(id string) (*models.ModelUser, error) {
 
-	user.ID = input.ID
-
-	res, err := s.Repository.Result(&user)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 }
 
-func (s *ServiceUser) Delete(input *domain.UserInput) (*models.ModelUser, error) {
-	var user domain.UserInput
+func (s *ServiceUser) Delete(id string) (*models.ModelUser, error) {
 
-	user.ID = input.ID
-
-	res, err := s.Repository.Delete(&user)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceUser) Update(input *domain.UserInput) (*models.ModelUser, error) {
-	var user domain.UserInput
+func (s *ServiceUser) Update(input *domain.UpdateUserRequest) (*models.ModelUser, error) {
+	var user domain.UpdateUserRequest
 
 	user.ID = input.ID
 

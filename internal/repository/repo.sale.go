@@ -15,7 +15,7 @@ func NewRepositorySale(db *gorm.DB) *repositorySale {
 	return &repositorySale{db: db}
 }
 
-func (r *repositorySale) Create(input *domain.SaleInput) (*models.ModelSale, error) {
+func (r *repositorySale) Create(input *domain.CreateSaleRequest) (*models.ModelSale, error) {
 	var sale models.ModelSale
 
 	sale.Name = input.Name
@@ -56,9 +56,9 @@ func (r *repositorySale) Results() (*[]models.ModelSale, error) {
 	return &sale, nil
 }
 
-func (r *repositorySale) Result(input *domain.SaleInput) (*models.ModelSale, error) {
+func (r *repositorySale) Result(id string) (*models.ModelSale, error) {
 	var sale models.ModelSale
-	sale.ID = input.ID
+	sale.ID = id
 
 	db := r.db.Model(&sale)
 
@@ -72,9 +72,9 @@ func (r *repositorySale) Result(input *domain.SaleInput) (*models.ModelSale, err
 	return &sale, nil
 }
 
-func (r *repositorySale) Delete(input *domain.SaleInput) (*models.ModelSale, error) {
+func (r *repositorySale) Delete(id string) (*models.ModelSale, error) {
 	var sale models.ModelSale
-	sale.ID = input.ID
+	sale.ID = id
 
 	db := r.db.Model(&sale)
 
@@ -95,7 +95,7 @@ func (r *repositorySale) Delete(input *domain.SaleInput) (*models.ModelSale, err
 	return &sale, nil
 }
 
-func (r *repositorySale) Update(input *domain.SaleInput) (*models.ModelSale, error) {
+func (r *repositorySale) Update(input *domain.UpdateSaleRequest) (*models.ModelSale, error) {
 	var sale models.ModelSale
 
 	sale.ID = input.ID

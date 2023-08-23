@@ -14,8 +14,8 @@ func NewServiceSale(sale repository.SaleRepository) *ServiceSale {
 	return &ServiceSale{Repository: sale}
 }
 
-func (s *ServiceSale) Create(input *domain.SaleInput) (*models.ModelSale, error) {
-	var sale domain.SaleInput
+func (s *ServiceSale) Create(input *domain.CreateSaleRequest) (*models.ModelSale, error) {
+	var sale domain.CreateSaleRequest
 
 	sale.Name = input.Name
 	sale.Telepon = input.Telepon
@@ -32,28 +32,23 @@ func (s *ServiceSale) Results() (*[]models.ModelSale, error) {
 	return res, err
 }
 
-func (s *ServiceSale) Result(input *domain.SaleInput) (*models.ModelSale, error) {
-	var sale domain.SaleInput
+func (s *ServiceSale) Result(id string) (*models.ModelSale, error) {
 
-	sale.ID = input.ID
-
-	res, err := s.Repository.Result(&sale)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 }
 
-func (s *ServiceSale) Delete(input *domain.SaleInput) (*models.ModelSale, error) {
-	var sale domain.SaleInput
+func (s *ServiceSale) Delete(id string) (*models.ModelSale, error) {
 
-	sale.ID = input.ID
-
-	res, err := s.Repository.Delete(&sale)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceSale) Update(input *domain.SaleInput) (*models.ModelSale, error) {
-	var sale domain.SaleInput
+func (s *ServiceSale) Update(input *domain.UpdateSaleRequest) (*models.ModelSale, error) {
+	var sale domain.UpdateSaleRequest
+
 	sale.Name = input.Name
 	sale.Telepon = input.Telepon
 	sale.Email = input.Email

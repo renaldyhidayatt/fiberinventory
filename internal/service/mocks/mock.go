@@ -9,7 +9,7 @@ import (
 	models "fiberinventory/internal/models"
 	reflect "reflect"
 
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockUserService is a mock of UserService interface.
@@ -36,22 +36,22 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 }
 
 // Delete mocks base method.
-func (m *MockUserService) Delete(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserService) Delete(id string) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockUserServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserService)(nil).Delete), id)
 }
 
 // Login mocks base method.
-func (m *MockUserService) Login(input *domain.UserInput) (domain.Token, error) {
+func (m *MockUserService) Login(input *domain.LoginInput) (domain.Token, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", input)
 	ret0, _ := ret[0].(domain.Token)
@@ -66,7 +66,7 @@ func (mr *MockUserServiceMockRecorder) Login(input interface{}) *gomock.Call {
 }
 
 // Register mocks base method.
-func (m *MockUserService) Register(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserService) Register(input *domain.RegisterInput) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", input)
 	ret0, _ := ret[0].(*models.ModelUser)
@@ -81,18 +81,18 @@ func (mr *MockUserServiceMockRecorder) Register(input interface{}) *gomock.Call 
 }
 
 // Result mocks base method.
-func (m *MockUserService) Result(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserService) Result(id string) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelUser)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockUserServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockUserServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockUserService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockUserService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -111,7 +111,7 @@ func (mr *MockUserServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockUserService) Update(input *domain.UserInput) (*models.ModelUser, error) {
+func (m *MockUserService) Update(input *domain.UpdateUserRequest) (*models.ModelUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelUser)
@@ -149,7 +149,7 @@ func (m *MockCategoryService) EXPECT() *MockCategoryServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockCategoryService) Create(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryService) Create(input *domain.CreateCategoryRequest) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelCategory)
@@ -164,33 +164,33 @@ func (mr *MockCategoryServiceMockRecorder) Create(input interface{}) *gomock.Cal
 }
 
 // Delete mocks base method.
-func (m *MockCategoryService) Delete(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryService) Delete(id string) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelCategory)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockCategoryServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockCategoryServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCategoryService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCategoryService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockCategoryService) Result(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryService) Result(id string) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelCategory)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockCategoryServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockCategoryServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCategoryService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCategoryService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -209,7 +209,7 @@ func (mr *MockCategoryServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockCategoryService) Update(input *domain.CategoryInput) (*models.ModelCategory, error) {
+func (m *MockCategoryService) Update(input *domain.UpdateCategoryRequest) (*models.ModelCategory, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelCategory)
@@ -247,7 +247,7 @@ func (m *MockCustomerService) EXPECT() *MockCustomerServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockCustomerService) Create(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerService) Create(input *domain.CreateCustomerRequest) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelCustomer)
@@ -262,33 +262,33 @@ func (mr *MockCustomerServiceMockRecorder) Create(input interface{}) *gomock.Cal
 }
 
 // Delete mocks base method.
-func (m *MockCustomerService) Delete(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerService) Delete(id string) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelCustomer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockCustomerServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockCustomerServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCustomerService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCustomerService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockCustomerService) Result(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerService) Result(id string) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelCustomer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockCustomerServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockCustomerServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCustomerService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockCustomerService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -307,7 +307,7 @@ func (mr *MockCustomerServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockCustomerService) Update(input *domain.CustomerInput) (*models.ModelCustomer, error) {
+func (m *MockCustomerService) Update(input *domain.UpdateCustomerRequest) (*models.ModelCustomer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelCustomer)
@@ -345,7 +345,7 @@ func (m *MockProductService) EXPECT() *MockProductServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockProductService) Create(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductService) Create(input *domain.CreateProductRequest) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelProduct)
@@ -360,33 +360,33 @@ func (mr *MockProductServiceMockRecorder) Create(input interface{}) *gomock.Call
 }
 
 // Delete mocks base method.
-func (m *MockProductService) Delete(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductService) Delete(id string) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelProduct)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockProductServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockProductService) Result(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductService) Result(id string) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelProduct)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockProductServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockProductServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -405,7 +405,7 @@ func (mr *MockProductServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockProductService) Update(input *domain.ProductInput) (*models.ModelProduct, error) {
+func (m *MockProductService) Update(input *domain.UpdateProductRequest) (*models.ModelProduct, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelProduct)
@@ -443,7 +443,7 @@ func (m *MockProductKeluarService) EXPECT() *MockProductKeluarServiceMockRecorde
 }
 
 // Create mocks base method.
-func (m *MockProductKeluarService) Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarService) Create(input *domain.CreateProductKeluarRequest) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
@@ -458,33 +458,33 @@ func (mr *MockProductKeluarServiceMockRecorder) Create(input interface{}) *gomoc
 }
 
 // Delete mocks base method.
-func (m *MockProductKeluarService) Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarService) Delete(id string) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductKeluarServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockProductKeluarServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductKeluarService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductKeluarService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockProductKeluarService) Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarService) Result(id string) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockProductKeluarServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockProductKeluarServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductKeluarService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductKeluarService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -503,7 +503,7 @@ func (mr *MockProductKeluarServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockProductKeluarService) Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (m *MockProductKeluarService) Update(input *domain.UpdateProductKeluarRequest) (*models.ModelProductKeluar, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelProductKeluar)
@@ -541,7 +541,7 @@ func (m *MockProductMasukService) EXPECT() *MockProductMasukServiceMockRecorder 
 }
 
 // Create mocks base method.
-func (m *MockProductMasukService) Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukService) Create(input *domain.CreateProductMasukRequest) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
@@ -556,33 +556,33 @@ func (mr *MockProductMasukServiceMockRecorder) Create(input interface{}) *gomock
 }
 
 // Delete mocks base method.
-func (m *MockProductMasukService) Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukService) Delete(id string) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductMasukServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockProductMasukServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductMasukService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductMasukService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockProductMasukService) Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukService) Result(id string) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockProductMasukServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockProductMasukServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductMasukService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockProductMasukService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -601,7 +601,7 @@ func (mr *MockProductMasukServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockProductMasukService) Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
+func (m *MockProductMasukService) Update(input *domain.UpdateProductMasukRequest) (*models.ModelProductMasuk, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelProductMasuk)
@@ -639,7 +639,7 @@ func (m *MockSaleService) EXPECT() *MockSaleServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockSaleService) Create(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleService) Create(input *domain.CreateSaleRequest) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelSale)
@@ -654,33 +654,33 @@ func (mr *MockSaleServiceMockRecorder) Create(input interface{}) *gomock.Call {
 }
 
 // Delete mocks base method.
-func (m *MockSaleService) Delete(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleService) Delete(id string) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelSale)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockSaleServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockSaleServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSaleService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSaleService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockSaleService) Result(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleService) Result(id string) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelSale)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockSaleServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockSaleServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSaleService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSaleService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -699,7 +699,7 @@ func (mr *MockSaleServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockSaleService) Update(input *domain.SaleInput) (*models.ModelSale, error) {
+func (m *MockSaleService) Update(input *domain.UpdateSaleRequest) (*models.ModelSale, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelSale)
@@ -737,7 +737,7 @@ func (m *MockSupplierService) EXPECT() *MockSupplierServiceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockSupplierService) Create(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierService) Create(input *domain.CreateSupplierRequest) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", input)
 	ret0, _ := ret[0].(*models.ModelSupplier)
@@ -752,33 +752,33 @@ func (mr *MockSupplierServiceMockRecorder) Create(input interface{}) *gomock.Cal
 }
 
 // Delete mocks base method.
-func (m *MockSupplierService) Delete(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierService) Delete(id string) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", input)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(*models.ModelSupplier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockSupplierServiceMockRecorder) Delete(input interface{}) *gomock.Call {
+func (mr *MockSupplierServiceMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSupplierService)(nil).Delete), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockSupplierService)(nil).Delete), id)
 }
 
 // Result mocks base method.
-func (m *MockSupplierService) Result(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierService) Result(id string) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Result", input)
+	ret := m.ctrl.Call(m, "Result", id)
 	ret0, _ := ret[0].(*models.ModelSupplier)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Result indicates an expected call of Result.
-func (mr *MockSupplierServiceMockRecorder) Result(input interface{}) *gomock.Call {
+func (mr *MockSupplierServiceMockRecorder) Result(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSupplierService)(nil).Result), input)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Result", reflect.TypeOf((*MockSupplierService)(nil).Result), id)
 }
 
 // Results mocks base method.
@@ -797,7 +797,7 @@ func (mr *MockSupplierServiceMockRecorder) Results() *gomock.Call {
 }
 
 // Update mocks base method.
-func (m *MockSupplierService) Update(input *domain.SupplierInput) (*models.ModelSupplier, error) {
+func (m *MockSupplierService) Update(input *domain.UpdateSupplierRequest) (*models.ModelSupplier, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", input)
 	ret0, _ := ret[0].(*models.ModelSupplier)

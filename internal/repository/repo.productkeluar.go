@@ -15,7 +15,7 @@ func NewRepositoryProductKeluar(db *gorm.DB) *repositoryProductKeluar {
 	return &repositoryProductKeluar{db: db}
 }
 
-func (r *repositoryProductKeluar) Create(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (r *repositoryProductKeluar) Create(input *domain.CreateProductKeluarRequest) (*models.ModelProductKeluar, error) {
 	var productkeluar models.ModelProductKeluar
 
 	productkeluar.Qty = input.Qty
@@ -34,12 +34,12 @@ func (r *repositoryProductKeluar) Create(input *domain.ProductKeluarInput) (*mod
 	return &productkeluar, nil
 }
 
-func (r *repositoryProductKeluar) Result(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (r *repositoryProductKeluar) Result(id string) (*models.ModelProductKeluar, error) {
 	var productkeluar models.ModelProductKeluar
 
 	db := r.db.Model(&productkeluar)
 
-	checkProductKeluar := db.Debug().Where("id = ?", input.ID).Find(&productkeluar)
+	checkProductKeluar := db.Debug().Where("id = ?", id).Find(&productkeluar)
 
 	if checkProductKeluar.RowsAffected < 1 {
 		return nil, domain.ErrorProductKeluarNotFound
@@ -62,10 +62,10 @@ func (r *repositoryProductKeluar) Results() (*[]models.ModelProductKeluar, error
 	return &productkeluar, nil
 }
 
-func (r *repositoryProductKeluar) Delete(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (r *repositoryProductKeluar) Delete(id string) (*models.ModelProductKeluar, error) {
 	var productkeluar models.ModelProductKeluar
 
-	productkeluar.ID = input.ID
+	productkeluar.ID = id
 
 	db := r.db.Model(&productkeluar)
 
@@ -79,7 +79,7 @@ func (r *repositoryProductKeluar) Delete(input *domain.ProductKeluarInput) (*mod
 	return &productkeluar, nil
 }
 
-func (r *repositoryProductKeluar) Update(input *domain.ProductKeluarInput) (*models.ModelProductKeluar, error) {
+func (r *repositoryProductKeluar) Update(input *domain.UpdateProductKeluarRequest) (*models.ModelProductKeluar, error) {
 	var productkeluar models.ModelProductKeluar
 
 	productkeluar.ID = input.ID

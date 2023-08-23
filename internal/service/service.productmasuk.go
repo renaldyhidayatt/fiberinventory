@@ -14,8 +14,8 @@ func NewServiceProductMasuk(productmasuk repository.ProductMasukRepository) *Ser
 	return &ServiceProductMasuk{Repository: productmasuk}
 }
 
-func (s *ServiceProductMasuk) Create(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
-	var productmasuk domain.ProductMasukInput
+func (s *ServiceProductMasuk) Create(input *domain.CreateProductMasukRequest) (*models.ModelProductMasuk, error) {
+	var productmasuk domain.CreateProductMasukRequest
 
 	productmasuk.Name = input.Name
 	productmasuk.Qty = input.Qty
@@ -33,27 +33,23 @@ func (s *ServiceProductMasuk) Results() (*[]models.ModelProductMasuk, error) {
 	return res, err
 }
 
-func (s *ServiceProductMasuk) Result(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
-	var productmasuk domain.ProductMasukInput
-	productmasuk.ID = input.ID
+func (s *ServiceProductMasuk) Result(id string) (*models.ModelProductMasuk, error) {
 
-	res, err := s.Repository.Result(&productmasuk)
+	res, err := s.Repository.Result(id)
 
 	return res, err
 
 }
 
-func (s *ServiceProductMasuk) Delete(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
-	var productmasuk domain.ProductMasukInput
-	productmasuk.ID = input.ID
+func (s *ServiceProductMasuk) Delete(id string) (*models.ModelProductMasuk, error) {
 
-	res, err := s.Repository.Delete(&productmasuk)
+	res, err := s.Repository.Delete(id)
 
 	return res, err
 }
 
-func (s *ServiceProductMasuk) Update(input *domain.ProductMasukInput) (*models.ModelProductMasuk, error) {
-	var productmasuk domain.ProductMasukInput
+func (s *ServiceProductMasuk) Update(input *domain.UpdateProductMasukRequest) (*models.ModelProductMasuk, error) {
+	var productmasuk domain.UpdateProductMasukRequest
 
 	productmasuk.Name = input.Name
 	productmasuk.Qty = input.Qty
