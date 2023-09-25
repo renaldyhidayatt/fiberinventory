@@ -64,17 +64,17 @@ func RunServer() {
 
 	categoryGapi := gapi.NewCategoryHandlerGrpcHandler(services.Category)
 
-	// customerGapi := gapi.NewCustomerHandlerGrpc(services.Customer)
+	customerGapi := gapi.NewCustomerHandlerGrpc(services.Customer)
 
-	// productGapi := gapi.NewProductHandlerGrpcHandler(services.Product)
+	productGapi := gapi.NewProductHandlerGrpcHandler(services.Product)
 
-	// userGapi := gapi.NewUserHandlerGrpcHandler(services.User)
+	userGapi := gapi.NewUserHandlerGrpcHandler(services.User)
 
-	// productKeluarGapi := gapi.NewProductKeluarHandlerGrpcHandler(services.ProductKeluar)
+	productKeluarGapi := gapi.NewProductKeluarHandlerGrpcHandler(services.ProductKeluar)
 
-	// saleGapi := gapi.NewSaleHandlerGrpc(services.Sale)
+	saleGapi := gapi.NewSaleHandlerGrpc(services.Sale)
 
-	// supplierGapi := gapi.NewSupplierHandlerGrpc(services.Supplier)
+	supplierGapi := gapi.NewSupplierHandlerGrpc(services.Supplier)
 
 	if err != nil {
 		return
@@ -84,12 +84,12 @@ func RunServer() {
 
 	pb.RegisterAuthServiceServer(s, authGapi)
 	pb.RegisterCategoryServiceServer(s, categoryGapi)
-	// pb.RegisterCustomerServiceServer(s, customerGapi)
-	// pb.RegisterProductServiceServer(s, productGapi)
-	// pb.RegisterUserServiceServer(s, userGapi)
-	// pb.RegisterProductKeluarServiceServer(s, productKeluarGapi)
-	// pb.RegisterSaleServiceServer(s, saleGapi)
-	// pb.RegisterSupplierServiceServer(s, supplierGapi)
+	pb.RegisterCustomerServiceServer(s, customerGapi)
+	pb.RegisterProductServiceServer(s, productGapi)
+	pb.RegisterUserServiceServer(s, userGapi)
+	pb.RegisterProductKeluarServiceServer(s, productKeluarGapi)
+	pb.RegisterSaleServiceServer(s, saleGapi)
+	pb.RegisterSupplierServiceServer(s, supplierGapi)
 
 	log.Printf("Server listening at %v", lis.Addr())
 
