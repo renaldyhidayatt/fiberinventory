@@ -5,7 +5,7 @@ import (
 	"fiberinventory/internal/pb"
 	"fiberinventory/pkg/dotenv"
 	"fiberinventory/pkg/logger"
-	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -15,10 +15,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-)
-
-var (
-	addr = flag.String("addr", "localhost:50051", "the address to connect to")
 )
 
 // @title FiberInventory
@@ -41,7 +37,7 @@ func RunClient() {
 		logger.Error("error", zap.Error(err))
 	}
 
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(viper.GetString("PORT_SERVER"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -62,10 +58,13 @@ func RunClient() {
 	app := myhandler.Init()
 
 	go func() {
-		if err := app.Listen(":" + viper.GetString("PORT")); err != nil {
+		if err := app.Listen(":" + viper.GetString("PORT_CLIENT")); err != nil {
 			panic(err)
 		}
 	}()
+
+	fmt.Println("Server running on port " + viper.GetString("PORT_SERVER"))
+	fmt.Println("Client running on port " + viper.GetString("PORT_CLIENT"))
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)

@@ -12,5 +12,14 @@ Backend
 
 untuk menjalankan program tersebut
 
-`make run-client && make run-server
-`
+## Running Local
+
+```bash
+make run-client && make run-server
+```
+
+## Running on Docker
+
+```bash
+ docker-compose up --build -d
+```

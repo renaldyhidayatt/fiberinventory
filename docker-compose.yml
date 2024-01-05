@@ -1,28 +1,58 @@
 version: '3.8'
 
 services:
-  web:
-    build: 
+  web_server:
+    build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile_server
+    env_file:
+      - .env
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     restart: on-failure
     volumes:
-      - api:/usr/app/src
+      - api_server:/app/
     depends_on:
       - dbpostgres
+
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     networks:
       - sanedge
 
+  web_client:
+    build:
+      context: .
+      dockerfile: ./Dockerfile_client
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5001:5001"
+    restart: on-failure
+    volumes:
+      - api_client:/app/
+    depends_on:
+      - dbpostgres
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+
+    networks:
+      - sanedge
 
   dbpostgres:
-    image: postgres:14.1-alpine
+    image: postgres:15.5-alpine
+    env_file:
+      - .env
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
     ports:
       - "5432:5432"
     networks:
@@ -30,8 +60,10 @@ services:
     restart: unless-stopped
 
 volumes:
-  api:
+  api_server:
+  api_client:
   database:
+
 
 networks:
   sanedge:
