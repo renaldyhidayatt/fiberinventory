@@ -20,16 +20,20 @@ import (
 	"google.golang.org/grpc"
 )
 
+var (
+	port = flag.Int("port", 50051, "gRPC server port")
+)
+
 func RunServer() {
 
 	logger.Info("Grpc Server running ...")
 
 	flag.Parse()
 
-	lis, err := net.Listen("tcp", ":5000")
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 
 	if err != nil {
-		logger.Fatal("Failed to listen on port "+viper.GetString("PORT_SERVER"), zap.Error(err))
+		logger.Fatal("Failed to listen", zap.Error(err))
 	}
 
 	err = dotenv.Viper()

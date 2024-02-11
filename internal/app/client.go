@@ -1,20 +1,23 @@
 package app
 
 import (
+	"context"
 	"fiberinventory/internal/handler/api"
 	"fiberinventory/internal/pb"
 	"fiberinventory/pkg/dotenv"
 	"fiberinventory/pkg/logger"
-	"fmt"
-	"log"
+	"flag"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+)
+
+var (
+	addr = flag.String("addr", "localhost:50051", "the address to connect to")
 )
 
 // @title FiberInventory
@@ -30,17 +33,19 @@ import (
 
 // Run initializes whole application.
 func RunClient() {
+	flag.Parse()
 
 	err := dotenv.Viper()
-
 	if err != nil {
 		logger.Error("error", zap.Error(err))
 	}
 
-	conn, err := grpc.Dial(viper.GetString("PORT_SERVER"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
+	conn, err := grpc.DialContext(ctx, *addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		logger.Fatal("Failed to connect to server", zap.Error(err))
 	}
 
 	clientAuth := pb.NewAuthServiceClient(conn)
@@ -58,23 +63,19 @@ func RunClient() {
 	app := myhandler.Init()
 
 	go func() {
-		if err := app.Listen(":" + viper.GetString("PORT_CLIENT")); err != nil {
-			panic(err)
+		if err := app.Listen(":5000"); err != nil {
+			logger.Error("server error", zap.Error(err))
 		}
 	}()
 
-	fmt.Println("Server running on port " + viper.GetString("PORT_SERVER"))
-	fmt.Println("Client running on port " + viper.GetString("PORT_CLIENT"))
+	// Graceful shutdown
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+	<-stop
 
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	logger.Info("Shutting down the server...")
 
-	<-c
-	logger.Info("Gracefully shutting down...")
-	_ = app.Shutdown()
+	cancel()
 
-	logger.Info("Running cleanup tasks...")
-
-	logger.Info("Fiber was successfully shut down.")
-
+	logger.Info("Server has been shut down gracefully")
 }

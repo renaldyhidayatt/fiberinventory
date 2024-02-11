@@ -32,7 +32,7 @@ func (r *repositoryUser) Register(input *domain.RegisterInput) (*models.ModelUse
 	}
 
 	addNewUser := db.Debug().Create(&user).Commit()
-	if addNewUser.RowsAffected > 1 {
+	if addNewUser.RowsAffected < 1 {
 		return nil, domain.ErrorRegisterFailed
 	}
 
